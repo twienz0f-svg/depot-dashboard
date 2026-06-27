@@ -7,9 +7,9 @@
 <title>Mein Depot</title>
 <style>
   :root{
-    --bg:#F6F7F5; --surface:#FFFFFF; --ink:#191C1A; --muted:#6B716D;
-    --faint:#9AA09B; --line:#E4E7E3; --accent:#0F6E56; --accent-soft:#E1F1EB;
-    --up:#854F0B; --up-soft:#FAEEDA; --down:#A32D2D; --down-soft:#FCEBEB;
+    --bg:#111412; --surface:#1C1F1D; --ink:#E8EBE8; --muted:#8A9189;
+    --faint:#5A6059; --line:#2C302D; --accent:#3DB584; --accent-soft:#1A3A2E;
+    --up:#E8A44A; --up-soft:#3A2A10; --down:#E06060; --down-soft:#3A1A1A;
     --radius:12px;
   }
   *{box-sizing:border-box;}
@@ -58,6 +58,16 @@
   .rung .meta{font-size:12px;color:var(--muted);text-align:right;}
 
   .flow-bar{display:flex;height:30px;border-radius:7px;overflow:hidden;margin-bottom:14px;}
+
+  .rebal{display:flex;flex-direction:column;gap:12px;}
+  .rebal-row{display:grid;grid-template-columns:90px 1fr 54px 54px 80px;gap:12px;align-items:center;font-size:14px;}
+  .rebal-row.head{font-size:12px;color:var(--faint);font-weight:400;padding-bottom:2px;}
+  .rebal-track{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;border:1px solid var(--line);}
+  .rebal-ist{height:100%;border-radius:5px;}
+  .rebal-ziel-mark{position:relative;}
+  .rebal-diff-pos{color:#3DB584;}
+  .rebal-diff-neg{color:var(--down);}
+  .rebal-diff-neu{color:var(--muted);}
   .legend{display:flex;flex-wrap:wrap;gap:20px;font-size:13.5px;align-items:center;}
   .legend .it{display:flex;align-items:center;gap:7px;}
   .legend b{font-weight:600;}
@@ -75,69 +85,284 @@
 <body>
 <div class="wrap">
 
-  <header class="top">
-    <h1>Mein Depot</h1>
-    <p>Weltwirtschaft (70/10) + Reserve (20) · Stand <span id="stamp"></span></p>
+  <header class="top" style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h1>TW-Invest 🌱</h1>
+      <p>Weltwirtschaft (70/10) + Reserve (20) · Stand <span id="stamp"></span></p>
+    </div>
+    <button onclick="document.getElementById('daten-modal').style.display='flex'"
+      style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;margin-top:2px;">Daten</button>
   </header>
 
+  <!-- Daten-Modal -->
+  <div id="daten-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;width:320px;display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:15px;font-weight:600;color:var(--ink);">Daten</span>
+        <button onclick="document.getElementById('daten-modal').style.display='none'"
+          style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">ATH</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input id="refhoch-input" type="text" value="102000"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">€</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Yield</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">ETF1</span>
+          <input id="yield-etf1" type="text" value="1,5"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">ETF2</span>
+          <input id="yield-etf2" type="text" value="4"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">TG</span>
+          <input id="yield-tg" type="text" value="2"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">%</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Steuer</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input id="tax-input" type="text" value="27,5"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">%</span>
+        </div>
+      </div>
+
+      <button onclick="saveAll()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
+    </div>
+  </div>
+
   <div class="cards">
-    <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.597 €</div></div>
-    <div class="card"><div class="lbl">Passives Einkommen / Monat</div><div class="val num">105,98 €</div></div>
-    <div class="card"><div class="lbl">Passives Einkommen / Jahr</div><div class="val num">1.271,71 €</div></div>
+    <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.591 €</div></div>
+    <div class="card"><div class="lbl">Einkommen / Monat</div><div class="val num">72,29 €</div></div>
+    <div class="card"><div class="lbl">Einkommen / Jahr</div><div class="val num">867,48 €</div></div>
   </div>
 
   <section class="panel">
-    <h2>TW-Invest 🌱</h2>
-    <p class="hint">Ist-Anteil gegen Ziel 70 / 10 / 20</p>
+    <h2>Allokation</h2>
+    <p class="hint">Weltwirtschaft &amp; Reserve</p>
     <div class="alloc">
       <div class="donut-wrap">
-        <div class="donut" style="background:conic-gradient(#2A78D6 0 79.9%,#0F6E56 79.9% 80.1%,#9AA09B 80.1% 100%)"></div>
-        <div class="donut-hole"><div class="h-lbl">gesamt</div><div class="h-val num">125.597 €</div></div>
+        <div class="donut" style="background:conic-gradient(#2A78D6 0 79.9%,#0F6E56 79.9% 80.1%,#C9A84C 80.1% 100%)"></div>
+        <div class="donut-hole"><div class="h-lbl">gesamt</div><div class="h-val num">125.591 €</div></div>
       </div>
       <table class="dist">
-        <thead><tr><th>Position</th><th>Ist</th><th>Ziel</th><th>Differenz</th></tr></thead>
+        <thead><tr><th>Position</th><th>Aktueller Wert</th></tr></thead>
         <tbody>
-          <tr><td><span class="dot" style="background:#2A78D6"></span>Vanguard</td><td class="num">79,9 %</td><td class="num" style="color:var(--muted)">70 %</td><td class="num" style="color:var(--up)">+12.413 €</td></tr>
-          <tr><td><span class="dot" style="background:#0F6E56"></span>L&amp;G</td><td class="num">0,2 %</td><td class="num" style="color:var(--muted)">10 %</td><td class="num" style="color:var(--down)">−12.309 €</td></tr>
-          <tr><td><span class="dot" style="background:#9AA09B"></span>Tagesgeld</td><td class="num">19,9 %</td><td class="num" style="color:var(--muted)">20 %</td><td class="num" style="color:var(--muted)">−105 €</td></tr>
+          <tr><td><span class="dot" style="background:#2A78D6"></span>Vanguard FTSE All-World</td><td class="num">100.325,33 €</td></tr>
+          <tr><td><span class="dot" style="background:#0F6E56"></span>L&amp;G Global Dividends</td><td class="num">250,24 €</td></tr>
+          <tr><td><span class="dot" style="background:#C9A84C"></span>TR Tagesgeld</td><td class="num">25.014,95 €</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
   <section class="panel">
-    <h2>Passives Einkommen</h2>
-    <p class="hint">Run-Rate (netto), Dividenden vs. Zinsen</p>
+    <h2>Einkommen</h2>
+    <p class="hint">Dividenden &amp; Zinsen</p>
     <div class="flow-bar">
-      <div class="seg" style="width:66.8%;background:#2A78D6;height:100%;"></div>
+      <div class="seg" style="width:51.3%;background:#2A78D6;height:100%;"></div>
       <div style="width:0.5%;background:var(--surface);height:100%;"></div>
-      <div class="seg" style="width:32.7%;background:#9AA09B;height:100%;"></div>
+      <div class="seg" style="width:48.2%;background:#C9A84C;height:100%;"></div>
     </div>
     <div class="legend">
-      <span class="it"><span class="dot" style="background:#2A78D6"></span>Dividenden <b class="num">70,80 €</b> <span class="mut num">(67 %)</span></span>
-      <span class="it"><span class="dot" style="background:#9AA09B"></span>Zinsen <b class="num">35,18 €</b> <span class="mut num">(33 %)</span></span>
-      <span class="mut">= <b class="num" style="color:var(--ink)">105,98 € / Monat</b></span>
+      <span class="it"><span class="dot" style="background:#2A78D6"></span>Dividenden <b class="num">37,11 €</b> <span class="mut num">(51 %)</span></span>
+      <span class="it"><span class="dot" style="background:#C9A84C"></span>Zinsen <b class="num">35,18 €</b> <span class="mut num">(49 %)</span></span>
+      <span class="mut">= <b class="num" style="color:var(--ink)">72,29 € / Monat</b></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Rebalancing</h2>
+    <p class="hint">Ziel-Verteilung: 70/10/20</p>
+    <div class="rebal">
+      <div class="rebal-row head">
+        <span>Position</span><span>Ist-Anteil</span><span style="text-align:right">Ist</span><span style="text-align:right">Ziel</span><span style="text-align:right">Differenz</span>
+      </div>
+      <div class="rebal-row">
+        <span><span class="dot" style="background:#2A78D6"></span>ETF1</span>
+        <div class="rebal-track"><div class="rebal-ist" style="width:79.9%;background:#2A78D6"></div></div>
+        <span class="num" style="text-align:right">79,9 %</span>
+        <span class="num" style="text-align:right;color:var(--muted)">70 %</span>
+        <span class="num rebal-diff-pos" style="text-align:right">+12.412 €</span>
+      </div>
+      <div class="rebal-row">
+        <span><span class="dot" style="background:#0F6E56"></span>ETF2</span>
+        <div class="rebal-track"><div class="rebal-ist" style="width:0.2%;background:#0F6E56"></div></div>
+        <span class="num" style="text-align:right">0,2 %</span>
+        <span class="num" style="text-align:right;color:var(--muted)">10 %</span>
+        <span class="num rebal-diff-neg" style="text-align:right">−12.309 €</span>
+      </div>
+      <div class="rebal-row">
+        <span><span class="dot" style="background:#C9A84C"></span>TG</span>
+        <div class="rebal-track"><div class="rebal-ist" style="width:19.9%;background:#C9A84C"></div></div>
+        <span class="num" style="text-align:right">19,9 %</span>
+        <span class="num" style="text-align:right;color:var(--muted)">20 %</span>
+        <span class="num rebal-diff-neg" style="text-align:right">−103 €</span>
+      </div>
     </div>
   </section>
 
   <section class="panel">
     <h2>Buy the Dip</h2>
-    <p class="hint">Referenzhoch 100.582 € · je Stufe 6.254 € (Vanguard 5.472 € · L&amp;G 782 €)</p>
-    <div class="ladder">
-      <div class="rung"><span class="pct">−10 %</span><div class="bar"><div class="fill" style="width:25%"></div><span class="txt num">fällt auf 90.524 €</span></div><span class="meta num">6.254 € · 25 %</span></div>
-      <div class="rung"><span class="pct">−15 %</span><div class="bar"><div class="fill" style="width:50%"></div><span class="txt num">fällt auf 85.495 €</span></div><span class="meta num">6.254 € · 50 %</span></div>
-      <div class="rung"><span class="pct">−20 %</span><div class="bar"><div class="fill" style="width:75%"></div><span class="txt num">fällt auf 80.466 €</span></div><span class="meta num">6.254 € · 75 %</span></div>
-      <div class="rung"><span class="pct">−25 %</span><div class="bar"><div class="fill" style="width:100%"></div><span class="txt num">fällt auf 75.437 €</span></div><span class="meta num">6.254 € · 100 %</span></div>
-    </div>
+    <p class="hint" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>ATH <span id="btd-refhoch-display"></span> € · Aktuell <span id="btd-ww">100.575,57</span> € · je Stufe <span id="btd-stufe"></span> €</span>
+      <span id="btd-ath-diff"></span>
+    </p>
+    <div class="ladder" id="btd-ladder"></div>
   </section>
 
-  <footer>
-    Persönliches Dashboard, keine Anlageberatung. Cashflow ist eine Run-Rate-Schätzung auf Basis der eingetragenen Werte; tatsächliche Ausschüttungen kommen unregelmäßig.
-  </footer>
+  <footer></footer>
 
 </div>
 <script>
   document.getElementById('stamp').textContent = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+
+  const WW = 100575.57;
+  const STUFE_ANTEILE = [0.25, 0.50, 0.75, 1.00];
+  const STUFE_PCT = [10, 15, 20, 25];
+
+  function fmt(n) {
+    return n.toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
+  }
+
+  function renderBtd() {
+    const raw = document.getElementById('refhoch-input').value.replace(/[.,\s]/g,'');
+    const refhoch = parseFloat(raw);
+    if (isNaN(refhoch) || refhoch <= 0) return;
+    document.getElementById('btd-refhoch-display').textContent = fmt(refhoch);
+    const diff = WW - refhoch;
+    const diffEl = document.getElementById('btd-ath-diff');
+    if (diff >= 0) {
+      diffEl.innerHTML = `<span style="color:#3DB584;">▲ ${fmt(diff)} €</span>`;
+    } else {
+      diffEl.innerHTML = `<span style="color:var(--down);">▼ ${fmt(Math.abs(diff))} €</span>`;
+    }
+
+    const stufe = refhoch * 0.06215; // 6,215% je Stufe (wie bisher ~6254€ bei 100582€)
+    const stufeEtf1 = stufe * (7/8);
+    const stufeEtf2 = stufe * (1/8);
+    document.getElementById('btd-stufe').textContent = `${fmt(stufe)} (ETF1 ${fmt(stufeEtf1)} · ETF2 ${fmt(stufeEtf2)})`;
+
+    // Aktueller Abstand vom All Time High in %
+    const abstand = (WW / refhoch - 1) * 100;
+
+    const ladder = document.getElementById('btd-ladder');
+    ladder.innerHTML = STUFE_PCT.map((pct, i) => {
+      const ziel = refhoch * (1 - pct / 100);
+      const fill = Math.min(STUFE_ANTEILE[i] * 100, 100);
+      // Stufe bereits erreicht?
+      const erreicht = abstand <= -pct;
+      const barColor = erreicht ? 'var(--down)' : 'var(--accent)';
+      return `<div class="rung">
+        <span class="pct">−${pct} %</span>
+        <div class="bar"><div class="fill" style="width:${fill}%;background:${barColor}"></div><span class="txt num">fällt auf ${fmt(ziel)} €</span></div>
+        <span class="meta num">${fmt(stufe)} € · ${fill} %</span>
+      </div>`;
+    }).join('');
+
+    localStorage.setItem('btd-refhoch', refhoch);
+  }
+
+  const VAL_ETF1 = 100325.33;
+  const VAL_ETF2 = 250.24;
+  const VAL_TG   = 25014.95;
+
+  function fmtEuro(n) {
+    return n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function parseYield(id) {
+    const v = parseFloat(document.getElementById(id).value.replace(',', '.'));
+    return isNaN(v) ? 0 : v;
+  }
+
+  function renderYield() {
+    const y1 = parseYield('yield-etf1');
+    const y2 = parseYield('yield-etf2');
+    const yTG = parseYield('yield-tg');
+
+    const taxRaw = parseFloat(document.getElementById('tax-input').value.replace(',', '.'));
+    const taxPct = isNaN(taxRaw) ? 27.5 : Math.max(0, Math.min(99, taxRaw));
+    const netFactor = 1 - taxPct / 100;
+    const div1   = (VAL_ETF1 * y1  / 100 / 12) * netFactor;
+    const div2   = (VAL_ETF2 * y2  / 100 / 12) * netFactor;
+    const zinsen = (VAL_TG   * yTG / 100 / 12) * netFactor;
+    const total = div1 + div2 + zinsen;
+
+    // Flow-Bar
+    const bar1 = total > 0 ? div1 / total * 100 : 0;
+    const bar2 = total > 0 ? div2 / total * 100 : 0;
+    const barTG = total > 0 ? zinsen / total * 100 : 0;
+    const gap = 0.4;
+    document.querySelector('.flow-bar').innerHTML = `
+      <div style="width:${bar1}%;background:#2A78D6;height:100%;"></div>
+      <div style="width:${bar2 > 0 ? gap : 0}%;background:var(--surface);height:100%;"></div>
+      <div style="width:${bar2}%;background:#0F6E56;height:100%;"></div>
+      <div style="width:${barTG > 0 ? gap : 0}%;background:var(--surface);height:100%;"></div>
+      <div style="width:${barTG}%;background:#C9A84C;height:100%;"></div>`;
+
+    // Legende
+    const divGes = div1 + div2;
+    function pct(v) { return total > 0 ? Math.round(v / total * 100) : 0; }
+    document.querySelector('.legend').innerHTML = `
+      <span class="it">Dividenden <b class="num">${fmtEuro(divGes)} €</b> <span class="mut num">(${pct(divGes)} %)</span></span>
+      <span class="it">Zinsen <b class="num">${fmtEuro(zinsen)} €</b> <span class="mut num">(${pct(zinsen)} %)</span></span>
+      <span class="mut">= <b class="num" style="color:var(--ink)">${fmtEuro(total)} € / Monat</b></span>`;
+
+    // Top-Karten
+    const cards = document.querySelectorAll('.card .val');
+    if (cards[1]) cards[1].textContent = fmtEuro(total) + ' €';
+    if (cards[2]) cards[2].textContent = fmtEuro(total * 12) + ' €';
+
+    localStorage.setItem('yield-etf1', y1);
+    localStorage.setItem('yield-etf2', y2);
+    localStorage.setItem('yield-tg', yTG);
+    localStorage.setItem('tax-pct', taxPct);
+  }
+
+  // Gespeicherte Werte laden
+  const saved = localStorage.getItem('btd-refhoch');
+  if (saved) document.getElementById('refhoch-input').value = saved;
+
+  ['etf1','etf2','tg'].forEach(k => {
+    const v = localStorage.getItem('yield-' + k);
+    if (v) document.getElementById('yield-' + k).value = String(v).replace('.', ',');
+  });
+  const savedTax = localStorage.getItem('tax-pct');
+  if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
+  renderYield();
+
+  function saveAll() {
+    renderBtd();
+    renderYield();
+    document.getElementById('daten-modal').style.display = 'none';
+  }
+
+  // Modal mit Klick außerhalb schließen
+  document.getElementById('daten-modal').addEventListener('click', function(e) {
+    if (e.target === this) this.style.display = 'none';
+  });
+
+  renderBtd();
 </script>
 </body>
 </html>
