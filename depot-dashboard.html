@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mein Depot</title>
+<style>
+  :root{
+    --bg:#F6F7F5; --surface:#FFFFFF; --ink:#191C1A; --muted:#6B716D;
+    --faint:#9AA09B; --line:#E4E7E3; --accent:#0F6E56; --accent-soft:#E1F1EB;
+    --up:#854F0B; --up-soft:#FAEEDA; --down:#A32D2D; --down-soft:#FCEBEB;
+    --radius:12px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.55; font-feature-settings:"tnum" 1,"lnum" 1;
+    padding:32px 20px 64px;
+  }
+  .wrap{max-width:840px;margin:0 auto;}
+  .num{font-variant-numeric:tabular-nums lining-nums;}
+
+  header.top{margin-bottom:28px;}
+  header.top h1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin:0;color:var(--accent);}
+  header.top p{margin:4px 0 0;color:var(--muted);font-size:14px;}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px;}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;}
+  .card .lbl{font-size:12.5px;color:var(--muted);margin-bottom:6px;}
+  .card .val{font-size:30px;line-height:1.1;}
+
+  section.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:18px;}
+  section.panel h2{font-size:16px;font-weight:600;margin:0 0 2px;}
+  section.panel .hint{font-size:13px;color:var(--muted);margin:0 0 16px;}
+
+  .alloc{display:grid;grid-template-columns:170px 1fr;gap:22px;align-items:center;}
+  .donut-wrap{position:relative;width:170px;height:170px;}
+  .donut{width:170px;height:170px;border-radius:50%;}
+  .donut-hole{position:absolute;inset:26px;background:var(--surface);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .donut-hole .h-lbl{font-size:11px;color:var(--faint);}
+  .donut-hole .h-val{font-size:16px;}
+  table.dist{width:100%;border-collapse:collapse;font-size:14px;}
+  table.dist th{font-weight:400;color:var(--faint);font-size:12px;text-align:right;padding:0 0 8px;}
+  table.dist th:first-child{text-align:left;}
+  table.dist td{padding:9px 0;border-top:1px solid var(--line);text-align:right;}
+  table.dist td:first-child{text-align:left;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:8px;vertical-align:middle;}
+
+  .ladder{display:flex;flex-direction:column;gap:9px;}
+  .rung{display:grid;grid-template-columns:58px 1fr 104px;gap:14px;align-items:center;}
+  .rung .pct{font-size:15px;font-weight:600;color:var(--down);}
+  .bar{position:relative;height:30px;background:var(--bg);border-radius:7px;overflow:hidden;border:1px solid var(--line);}
+  .bar .fill{position:absolute;inset:0;background:var(--accent);border-radius:6px;}
+  .bar .txt{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:12px;color:#fff;white-space:nowrap;}
+  .rung .meta{font-size:12px;color:var(--muted);text-align:right;}
+
+  .flow-bar{display:flex;height:30px;border-radius:7px;overflow:hidden;margin-bottom:14px;}
+  .legend{display:flex;flex-wrap:wrap;gap:20px;font-size:13.5px;align-items:center;}
+  .legend .it{display:flex;align-items:center;gap:7px;}
+  .legend b{font-weight:600;}
+  .legend .mut{color:var(--faint);}
+
+  footer{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.6;}
+
+  @media(max-width:560px){
+    .alloc{grid-template-columns:1fr;justify-items:center;}
+    .rung{grid-template-columns:48px 1fr;}
+    .rung .meta{grid-column:2;text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>Mein Depot</h1>
+    <p>Weltwirtschaft (70/10) + Reserve (20) · Stand <span id="stamp"></span></p>
+  </header>
+
+  <div class="cards">
+    <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.597 €</div></div>
+    <div class="card"><div class="lbl">Passives Einkommen / Monat</div><div class="val num">105,98 €</div></div>
+    <div class="card"><div class="lbl">Passives Einkommen / Jahr</div><div class="val num">1.271,71 €</div></div>
+  </div>
+
+  <section class="panel">
+    <h2>TW-Invest 🌱</h2>
+    <p class="hint">Ist-Anteil gegen Ziel 70 / 10 / 20</p>
+    <div class="alloc">
+      <div class="donut-wrap">
+        <div class="donut" style="background:conic-gradient(#2A78D6 0 79.9%,#0F6E56 79.9% 80.1%,#9AA09B 80.1% 100%)"></div>
+        <div class="donut-hole"><div class="h-lbl">gesamt</div><div class="h-val num">125.597 €</div></div>
+      </div>
+      <table class="dist">
+        <thead><tr><th>Position</th><th>Ist</th><th>Ziel</th><th>Differenz</th></tr></thead>
+        <tbody>
+          <tr><td><span class="dot" style="background:#2A78D6"></span>Vanguard</td><td class="num">79,9 %</td><td class="num" style="color:var(--muted)">70 %</td><td class="num" style="color:var(--up)">+12.413 €</td></tr>
+          <tr><td><span class="dot" style="background:#0F6E56"></span>L&amp;G</td><td class="num">0,2 %</td><td class="num" style="color:var(--muted)">10 %</td><td class="num" style="color:var(--down)">−12.309 €</td></tr>
+          <tr><td><span class="dot" style="background:#9AA09B"></span>Tagesgeld</td><td class="num">19,9 %</td><td class="num" style="color:var(--muted)">20 %</td><td class="num" style="color:var(--muted)">−105 €</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Passives Einkommen</h2>
+    <p class="hint">Run-Rate (netto), Dividenden vs. Zinsen</p>
+    <div class="flow-bar">
+      <div class="seg" style="width:66.8%;background:#2A78D6;height:100%;"></div>
+      <div style="width:0.5%;background:var(--surface);height:100%;"></div>
+      <div class="seg" style="width:32.7%;background:#9AA09B;height:100%;"></div>
+    </div>
+    <div class="legend">
+      <span class="it"><span class="dot" style="background:#2A78D6"></span>Dividenden <b class="num">70,80 €</b> <span class="mut num">(67 %)</span></span>
+      <span class="it"><span class="dot" style="background:#9AA09B"></span>Zinsen <b class="num">35,18 €</b> <span class="mut num">(33 %)</span></span>
+      <span class="mut">= <b class="num" style="color:var(--ink)">105,98 € / Monat</b></span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Buy the Dip</h2>
+    <p class="hint">Referenzhoch 100.582 € · je Stufe 6.254 € (Vanguard 5.472 € · L&amp;G 782 €)</p>
+    <div class="ladder">
+      <div class="rung"><span class="pct">−10 %</span><div class="bar"><div class="fill" style="width:25%"></div><span class="txt num">fällt auf 90.524 €</span></div><span class="meta num">6.254 € · 25 %</span></div>
+      <div class="rung"><span class="pct">−15 %</span><div class="bar"><div class="fill" style="width:50%"></div><span class="txt num">fällt auf 85.495 €</span></div><span class="meta num">6.254 € · 50 %</span></div>
+      <div class="rung"><span class="pct">−20 %</span><div class="bar"><div class="fill" style="width:75%"></div><span class="txt num">fällt auf 80.466 €</span></div><span class="meta num">6.254 € · 75 %</span></div>
+      <div class="rung"><span class="pct">−25 %</span><div class="bar"><div class="fill" style="width:100%"></div><span class="txt num">fällt auf 75.437 €</span></div><span class="meta num">6.254 € · 100 %</span></div>
+    </div>
+  </section>
+
+  <footer>
+    Persönliches Dashboard, keine Anlageberatung. Cashflow ist eine Run-Rate-Schätzung auf Basis der eingetragenen Werte; tatsächliche Ausschüttungen kommen unregelmäßig.
+  </footer>
+
+</div>
+<script>
+  document.getElementById('stamp').textContent = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
+</script>
+</body>
+</html>
