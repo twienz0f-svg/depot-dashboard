@@ -15,7 +15,7 @@ Wenn der Benutzer „Depot" schreibt:
    - JS-Konstanten VAL_ETF1, VAL_ETF2, VAL_TG
    - Span `btd-ww` (Weltwirtschaft-Aktuellwert)
 5. Committe mit Nachricht "Parqet-Update: [heutiges Datum]" und pushe zu GitHub (origin main)
-6. Keine Tabelle ausgeben, keine Erklärung — einfach nur "✓ Dashboard aktualisiert" melden
+6. Keine Tabelle ausgeben, keine Erklärung, kein Kommentar zu Börsenzeiten — immer aktualisieren und nur "✓ Dashboard aktualisiert ([Datum])" melden
 
 ## Formatierung
 
