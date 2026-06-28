@@ -458,7 +458,6 @@
       <span class="mut">= <b class="num" style="color:var(--ink)">${fmtEuro(total)} € / Monat</b></span>`;
 
     // Gesamtrendite
-    const VAL_ETF1 = parseEuro('wert-etf1'), VAL_ETF2 = parseEuro('wert-etf2'), VAL_TG = parseEuro('wert-tg');
     const gesamt = VAL_ETF1 + VAL_ETF2 + VAL_TG;
     const yieldPct = gesamt > 0 ? (total * 12 / gesamt * 100) : 0;
     document.querySelector('.yield-pct').innerHTML =
