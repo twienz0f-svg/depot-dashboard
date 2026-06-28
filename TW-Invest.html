@@ -237,6 +237,21 @@
   </section>
 
   <section class="panel">
+    <h2>FIRE Ziel</h2>
+    <p class="hint">Weg zur Million</p>
+    <div style="margin-bottom:10px;">
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;overflow:hidden;height:22px;">
+        <div id="fire-bar" style="height:100%;background:linear-gradient(90deg,#2A78D6,#3DB584);border-radius:8px;transition:width .4s;"></div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);">
+      <span>0 €</span>
+      <span id="fire-label" class="num" style="color:var(--ink);font-weight:600;"></span>
+      <span class="num">1.000.000 €</span>
+    </div>
+  </section>
+
+  <section class="panel">
     <h2>Rebalancing</h2>
     <p class="hint">Ziel-Verteilung: 70/10/20</p>
     <div class="rebal">
@@ -349,6 +364,12 @@
 
     // btd-ww
     document.getElementById('btd-ww').textContent = fmtEuro(ww);
+
+    // FIRE Ziel
+    const FIRE_ZIEL = 1000000;
+    const firePct = Math.min(gesamt / FIRE_ZIEL * 100, 100);
+    document.getElementById('fire-bar').style.width = firePct.toFixed(2) + '%';
+    document.getElementById('fire-label').textContent = fmtEuro(gesamt) + ' € (' + firePct.toFixed(1).replace('.', ',') + ' %)';
   }
 
   function renderBtd() {
