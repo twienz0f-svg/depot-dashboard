@@ -114,7 +114,7 @@
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
         </div>
-        <div id="kalk-split" style="display:flex;gap:12px;font-size:12px;color:var(--muted);padding:4px 0;"></div>
+        <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;">
@@ -549,9 +549,9 @@
 
     const dot = (c) => `<span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${c};margin-right:3px;"></span>`;
     document.getElementById('kalk-split').innerHTML =
-      `<span>${dot('#2A78D6')}ETF1 ${fmtEuro(etf1Spar)} €</span>` +
-      `<span>${dot('#0F6E56')}ETF2 ${fmtEuro(etf2Spar)} €</span>` +
-      `<span>${dot('#C9A84C')}TG ${fmtEuro(tgSpar)} €</span>`;
+      `<span style="display:flex;align-items:center;gap:5px;">${dot('#2A78D6')}Vanguard FTSE All-World</span><span style="text-align:right;">${fmtEuro(etf1Spar)}</span><span>€</span>` +
+      `<span style="display:flex;align-items:center;gap:5px;">${dot('#0F6E56')}L&amp;G Global Dividends</span><span style="text-align:right;">${fmtEuro(etf2Spar)}</span><span>€</span>` +
+      `<span style="display:flex;align-items:center;gap:5px;">${dot('#C9A84C')}TR Tagesgeld</span><span style="text-align:right;">${fmtEuro(tgSpar)}</span><span>€</span>`;
     const wwAktuell = parseEuro('wert-etf1') + parseEuro('wert-etf2');
     const tgAktuell = parseEuro('wert-tg');
     const y1  = parseYield('yield-etf1');
