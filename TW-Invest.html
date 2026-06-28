@@ -386,7 +386,7 @@
     const stufe = parseEuro('wert-tg') / STUFE_ANTEILE.length;
     const stufeEtf1 = stufe * (7/8);
     const stufeEtf2 = stufe * (1/8);
-    document.getElementById('btd-stufe').textContent = `${fmt(stufe)} (ETF1 ${fmt(stufeEtf1)} · ETF2 ${fmt(stufeEtf2)})`;
+    document.getElementById('btd-stufe').textContent = `${fmt(stufe)} (Vanguard ${fmt(stufeEtf1)} · L&G ${fmt(stufeEtf2)})`;
 
     // Aktueller Abstand vom All Time High in %
     const abstand = (getWW() / refhoch - 1) * 100;
