@@ -461,8 +461,7 @@
     const gesamt = VAL_ETF1 + VAL_ETF2 + VAL_TG;
     const yieldPct = gesamt > 0 ? (total * 12 / gesamt * 100) : 0;
     document.querySelector('.yield-pct').innerHTML =
-      `<div style="font-size:22px;font-weight:700;color:var(--ink);" class="num">${yieldPct.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</div>` +
-      `<div style="font-size:11px;color:var(--muted);margin-top:2px;">p.a. netto</div>`;
+      `<span style="font-size:13.5px;color:var(--muted);">Yield: </span><span style="font-size:13.5px;font-weight:600;color:var(--accent);" class="num">${yieldPct.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</span>`;
 
     // Top-Karten
     const cards = document.querySelectorAll('.card .val');
