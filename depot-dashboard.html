@@ -344,7 +344,7 @@
       diffEl.innerHTML = `<span style="color:var(--down);">▼ ${fmt(Math.abs(diff))} €</span>`;
     }
 
-    const stufe = refhoch * 0.06215; // 6,215% je Stufe (wie bisher ~6254€ bei 100582€)
+    const stufe = parseEuro('wert-tg') / STUFE_ANTEILE.length;
     const stufeEtf1 = stufe * (7/8);
     const stufeEtf2 = stufe * (1/8);
     document.getElementById('btd-stufe').textContent = `${fmt(stufe)} (ETF1 ${fmt(stufeEtf1)} · ETF2 ${fmt(stufeEtf2)})`;
