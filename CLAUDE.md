@@ -7,7 +7,7 @@ Wenn der Benutzer „Depot" schreibt:
 1. Hole aktuelle Positionswerte aus Parqet mit `parqet_query_portfolio` (view="holdings", portfolioId "682875b85bf20f788484a2b4")
 2. Extrahiere ETF1 (nickname "Vanguard FTSE All-World"), ETF2 (nickname "L&G Global Dividends"), TG (nickname "TR Tagesgeld")
 3. Berechne: Gesamt = ETF1 + ETF2 + TG, WW = ETF1 + ETF2, Prozentanteile, Differenzen zu Ziel 70/10/20
-4. Aktualisiere `depot-dashboard.html`:
+4. Aktualisiere `TW-Invest.html`:
    - Gesamtdepot-Karte
    - Donut-Gradient und Donut-Hole-Wert
    - Tabelle Kachel 1 (ETF1, ETF2, TG Werte)
