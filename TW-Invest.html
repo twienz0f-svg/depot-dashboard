@@ -492,6 +492,13 @@
   const saved = localStorage.getItem('btd-refhoch');
   if (saved) document.getElementById('refhoch-input').value = fmtInput(saved);
 
+  const htmlTs = document.getElementById('wert-etf1').dataset.parqetTs;
+  const storedTs = localStorage.getItem('parqet-ts');
+  if (htmlTs !== storedTs) {
+    ['etf1','etf2','tg'].forEach(k => localStorage.removeItem('wert-' + k));
+    localStorage.setItem('parqet-ts', htmlTs);
+  }
+
   ['etf1','etf2','tg'].forEach(k => {
     const wv = localStorage.getItem('wert-' + k);
     if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
