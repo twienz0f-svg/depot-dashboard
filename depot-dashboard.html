@@ -261,7 +261,6 @@
 <script>
   document.getElementById('stamp').textContent = new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'});
 
-  const WW = 100575.57;
   const STUFE_ANTEILE = [0.25, 0.50, 0.75, 1.00];
   const STUFE_PCT = [10, 15, 20, 25];
 
@@ -269,11 +268,74 @@
     return n.toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
   }
 
+  function getWW() {
+    return parseEuro('wert-etf1') + parseEuro('wert-etf2');
+  }
+
+  function renderWerte() {
+    const e1 = parseEuro('wert-etf1');
+    const e2 = parseEuro('wert-etf2');
+    const tg = parseEuro('wert-tg');
+    const gesamt = e1 + e2 + tg;
+    const ww = e1 + e2;
+
+    const pct1  = gesamt > 0 ? e1 / gesamt * 100 : 0;
+    const pct2  = gesamt > 0 ? e2 / gesamt * 100 : 0;
+    const pctTG = gesamt > 0 ? tg / gesamt * 100 : 0;
+    const p1  = pct1.toFixed(1);
+    const p12 = (pct1 + pct2).toFixed(1);
+
+    // Gesamtdepot-Karte
+    const cards = document.querySelectorAll('.card .val');
+    if (cards[0]) cards[0].textContent = fmt(gesamt) + ' €';
+
+    // Donut
+    document.querySelector('.donut').style.background =
+      `conic-gradient(#2A78D6 0 ${p1}%,#0F6E56 ${p1}% ${p12}%,#C9A84C ${p12}% 100%)`;
+    document.querySelector('.h-val').textContent = fmt(gesamt) + ' €';
+
+    // Tabelle Kachel 1
+    const tds = document.querySelectorAll('.dist tbody tr td.num');
+    if (tds[0]) tds[0].textContent = fmtEuro(e1) + ' €';
+    if (tds[1]) tds[1].textContent = fmtEuro(e2) + ' €';
+    if (tds[2]) tds[2].textContent = fmtEuro(tg) + ' €';
+
+    // Rebalancing Kachel 3
+    const rebalData = [
+      { pct: pct1,  diff: e1 - gesamt * 0.70 },
+      { pct: pct2,  diff: e2 - gesamt * 0.10 },
+      { pct: pctTG, diff: tg - gesamt * 0.20 },
+    ];
+    document.querySelectorAll('.rebal-row:not(.head)').forEach((row, i) => {
+      const d = rebalData[i];
+      row.querySelector('.rebal-ist').style.width = d.pct.toFixed(1) + '%';
+      const spans = row.querySelectorAll('span.num');
+      if (spans[0]) spans[0].textContent = d.pct.toFixed(1).replace('.', ',') + ' %';
+      const diffSpan = row.querySelector('[class*="rebal-diff"]');
+      if (diffSpan) {
+        const abs = Math.round(Math.abs(d.diff));
+        if (d.diff >= 0) {
+          diffSpan.className = 'num rebal-diff-pos';
+          diffSpan.style.textAlign = 'right';
+          diffSpan.textContent = '+' + fmt(abs) + ' €';
+        } else {
+          diffSpan.className = 'num rebal-diff-neg';
+          diffSpan.style.textAlign = 'right';
+          diffSpan.textContent = '−' + fmt(abs) + ' €';
+        }
+      }
+    });
+
+    // btd-ww
+    document.getElementById('btd-ww').textContent = fmtEuro(ww);
+  }
+
   function renderBtd() {
     const raw = document.getElementById('refhoch-input').value.replace(/[.,\s]/g,'');
     const refhoch = parseFloat(raw);
     if (isNaN(refhoch) || refhoch <= 0) return;
     document.getElementById('btd-refhoch-display').textContent = fmt(refhoch);
+    const WW = getWW();
     const diff = WW - refhoch;
     const diffEl = document.getElementById('btd-ath-diff');
     if (diff >= 0) {
@@ -288,7 +350,7 @@
     document.getElementById('btd-stufe').textContent = `${fmt(stufe)} (ETF1 ${fmt(stufeEtf1)} · ETF2 ${fmt(stufeEtf2)})`;
 
     // Aktueller Abstand vom All Time High in %
-    const abstand = (WW / refhoch - 1) * 100;
+    const abstand = (getWW() / refhoch - 1) * 100;
 
     const ladder = document.getElementById('btd-ladder');
     ladder.innerHTML = STUFE_PCT.map((pct, i) => {
@@ -381,12 +443,14 @@
   });
   const savedTax = localStorage.getItem('tax-pct');
   if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
+  renderWerte();
   renderYield();
 
   function saveAll() {
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
+    renderWerte();
     renderBtd();
     renderYield();
     document.getElementById('daten-modal').style.display = 'none';
