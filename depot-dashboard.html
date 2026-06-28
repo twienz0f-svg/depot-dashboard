@@ -113,6 +113,31 @@
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Wert</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">ETF1</span>
+          <input id="wert-etf1" type="text" value="100325,33"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">€</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">ETF2</span>
+          <input id="wert-etf2" type="text" value="250,24"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">€</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>
+          <span style="font-size:13px;color:var(--ink);width:40px;">TG</span>
+          <input id="wert-tg" type="text" value="25014,95"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">€</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">Yield</label>
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>
@@ -282,12 +307,13 @@
     localStorage.setItem('btd-refhoch', refhoch);
   }
 
-  const VAL_ETF1 = 100325.33;
-  const VAL_ETF2 = 250.24;
-  const VAL_TG   = 25014.95;
-
   function fmtEuro(n) {
     return n.toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+
+  function parseEuro(id) {
+    const v = parseFloat(document.getElementById(id).value.replace(/\./g,'').replace(',','.'));
+    return isNaN(v) ? 0 : v;
   }
 
   function parseYield(id) {
@@ -296,6 +322,10 @@
   }
 
   function renderYield() {
+    const VAL_ETF1 = parseEuro('wert-etf1');
+    const VAL_ETF2 = parseEuro('wert-etf2');
+    const VAL_TG   = parseEuro('wert-tg');
+
     const y1 = parseYield('yield-etf1');
     const y2 = parseYield('yield-etf2');
     const yTG = parseYield('yield-tg');
@@ -344,14 +374,19 @@
   if (saved) document.getElementById('refhoch-input').value = saved;
 
   ['etf1','etf2','tg'].forEach(k => {
-    const v = localStorage.getItem('yield-' + k);
-    if (v) document.getElementById('yield-' + k).value = String(v).replace('.', ',');
+    const yw = localStorage.getItem('yield-' + k);
+    if (yw) document.getElementById('yield-' + k).value = String(yw).replace('.', ',');
+    const wv = localStorage.getItem('wert-' + k);
+    if (wv) document.getElementById('wert-' + k).value = wv;
   });
   const savedTax = localStorage.getItem('tax-pct');
   if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
   renderYield();
 
   function saveAll() {
+    ['etf1','etf2','tg'].forEach(k => {
+      localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
+    });
     renderBtd();
     renderYield();
     document.getElementById('daten-modal').style.display = 'none';
