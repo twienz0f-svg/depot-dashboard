@@ -432,6 +432,9 @@
     localStorage.setItem('tax-pct', taxPct);
   }
 
+  // Alte Parqet-Werte aus localStorage entfernen (kommen jetzt immer aus HTML)
+  ['etf1','etf2','tg'].forEach(k => localStorage.removeItem('wert-' + k));
+
   // Gespeicherte Werte laden
   const saved = localStorage.getItem('btd-refhoch');
   if (saved) document.getElementById('refhoch-input').value = saved;
