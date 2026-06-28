@@ -176,7 +176,7 @@
   </div>
 
   <div class="cards">
-    <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.590 €</div></div>
+    <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.590,52 €</div></div>
     <div class="card"><div class="lbl">Einkommen / Monat</div><div class="val num">72,29 €</div></div>
     <div class="card"><div class="lbl">Einkommen / Jahr</div><div class="val num">867,48 €</div></div>
   </div>
@@ -287,7 +287,7 @@
 
     // Gesamtdepot-Karte
     const cards = document.querySelectorAll('.card .val');
-    if (cards[0]) cards[0].textContent = fmt(gesamt) + ' €';
+    if (cards[0]) cards[0].textContent = fmtEuro(gesamt) + ' €';
 
     // Donut
     document.querySelector('.donut').style.background =
