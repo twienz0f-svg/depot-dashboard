@@ -145,9 +145,10 @@
 
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">Letztes ATH</label>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 110px 16px;gap:8px;align-items:center;">
+          <span></span>
           <input id="refhoch-input" type="text" value="102.000,00" onblur="autoFmt(this)"
-            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+            style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
       </div>
@@ -184,9 +185,10 @@
 
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">Steuer</label>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 110px 16px;gap:8px;align-items:center;">
+          <span></span>
           <input id="tax-input" type="text" value="27,50" onblur="autoFmt(this)"
-            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+            style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">%</span>
         </div>
       </div>
