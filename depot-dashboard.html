@@ -106,7 +106,7 @@
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">ATH</label>
         <div style="display:flex;align-items:center;gap:8px;">
-          <input id="refhoch-input" type="text" value="102000"
+          <input id="refhoch-input" type="text" value="102.000"
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
@@ -117,7 +117,7 @@
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>
           <span style="font-size:13px;color:var(--ink);width:40px;">ETF1</span>
-          <input id="wert-etf1" type="text" value="100325,33" data-parqet-ts="2026-06-28T10:00"
+          <input id="wert-etf1" type="text" value="100.325,33" data-parqet-ts="2026-06-28T10:00"
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
@@ -131,7 +131,7 @@
         <div style="display:flex;align-items:center;gap:8px;">
           <span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>
           <span style="font-size:13px;color:var(--ink);width:40px;">TG</span>
-          <input id="wert-tg" type="text" value="25014,95"
+          <input id="wert-tg" type="text" value="25.014,95"
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
@@ -438,13 +438,20 @@
     localStorage.setItem('parqet-ts', parqetTs);
   }
 
+  function fmtInput(n) {
+    return parseFloat(n).toLocaleString('de-DE', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function fmtInputInt(n) {
+    return parseFloat(n).toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
+  }
+
   // Gespeicherte Werte laden
   const saved = localStorage.getItem('btd-refhoch');
-  if (saved) document.getElementById('refhoch-input').value = saved;
+  if (saved) document.getElementById('refhoch-input').value = fmtInputInt(saved);
 
   ['etf1','etf2','tg'].forEach(k => {
     const wv = localStorage.getItem('wert-' + k);
-    if (wv) document.getElementById('wert-' + k).value = wv;
+    if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
     const yw = localStorage.getItem('yield-' + k);
     if (yw) document.getElementById('yield-' + k).value = String(yw).replace('.', ',');
   });
