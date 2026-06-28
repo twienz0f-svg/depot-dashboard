@@ -114,6 +114,7 @@
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
         </div>
+        <div id="kalk-split" style="display:flex;gap:12px;font-size:12px;color:var(--muted);padding:4px 0;"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;">
@@ -554,8 +555,16 @@
 
   function renderKalkulation() {
     const sparrate  = parseEuro('kalk-sparrate');
-    const wwSpar    = sparrate * 0.8;
-    const tgSpar    = sparrate * 0.2;
+    const etf1Spar  = sparrate * 0.70;
+    const etf2Spar  = sparrate * 0.10;
+    const tgSpar    = sparrate * 0.20;
+    const wwSpar    = etf1Spar + etf2Spar;
+
+    const dot = (c) => `<span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${c};margin-right:3px;"></span>`;
+    document.getElementById('kalk-split').innerHTML =
+      `<span>${dot('#2A78D6')}ETF1 ${fmtEuro(etf1Spar)} €</span>` +
+      `<span>${dot('#0F6E56')}ETF2 ${fmtEuro(etf2Spar)} €</span>` +
+      `<span>${dot('#C9A84C')}TG ${fmtEuro(tgSpar)} €</span>`;
     const wwAktuell = parseEuro('wert-etf1') + parseEuro('wert-etf2');
     const tgAktuell = parseEuro('wert-tg');
     const y1  = parseYield('yield-etf1');
