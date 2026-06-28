@@ -246,12 +246,10 @@
       <div style="width:0.5%;background:var(--surface);height:100%;"></div>
       <div class="seg" style="width:48.2%;background:#C9A84C;height:100%;"></div>
     </div>
-    <div class="legend">
-      <span class="it"><span class="dot" style="background:#2A78D6"></span>Dividenden <b class="num">37,11 €</b> <span class="mut num">(51 %)</span></span>
-      <span class="it"><span class="dot" style="background:#C9A84C"></span>Zinsen <b class="num">35,18 €</b> <span class="mut num">(49 %)</span></span>
-      <span class="mut">= <b class="num" style="color:var(--ink)">72,29 € / Monat</b></span>
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div class="legend" style="flex:1;"></div>
+      <div class="yield-pct" style="text-align:right;flex-shrink:0;"></div>
     </div>
-    <div class="yield-info" style="margin-top:12px;display:flex;gap:12px;font-size:12px;color:var(--muted);"></div>
   </section>
 
   <section class="panel">
@@ -459,12 +457,13 @@
       <span class="it">Zinsen <b class="num">${fmtEuro(zinsen)} €</b> <span class="mut num">(${pct(zinsen)} %)</span></span>
       <span class="mut">= <b class="num" style="color:var(--ink)">${fmtEuro(total)} € / Monat</b></span>`;
 
-    // Yield-Info
-    const dot = (c) => `<span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${c};margin-right:4px;"></span>`;
-    document.querySelector('.yield-info').innerHTML =
-      `<span>${dot('#2A78D6')}ETF1 ${y1.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</span>` +
-      `<span>${dot('#0F6E56')}ETF2 ${y2.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</span>` +
-      `<span>${dot('#C9A84C')}TG ${yTG.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</span>`;
+    // Gesamtrendite
+    const VAL_ETF1 = parseEuro('wert-etf1'), VAL_ETF2 = parseEuro('wert-etf2'), VAL_TG = parseEuro('wert-tg');
+    const gesamt = VAL_ETF1 + VAL_ETF2 + VAL_TG;
+    const yieldPct = gesamt > 0 ? (total * 12 / gesamt * 100) : 0;
+    document.querySelector('.yield-pct').innerHTML =
+      `<div style="font-size:22px;font-weight:700;color:var(--ink);" class="num">${yieldPct.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</div>` +
+      `<div style="font-size:11px;color:var(--muted);margin-top:2px;">p.a. netto</div>`;
 
     // Top-Karten
     const cards = document.querySelectorAll('.card .val');
