@@ -438,8 +438,6 @@
   ['etf1','etf2','tg'].forEach(k => {
     const yw = localStorage.getItem('yield-' + k);
     if (yw) document.getElementById('yield-' + k).value = String(yw).replace('.', ',');
-    const wv = localStorage.getItem('wert-' + k);
-    if (wv) document.getElementById('wert-' + k).value = wv;
   });
   const savedTax = localStorage.getItem('tax-pct');
   if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
@@ -447,9 +445,6 @@
   renderYield();
 
   function saveAll() {
-    ['etf1','etf2','tg'].forEach(k => {
-      localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
-    });
     renderWerte();
     renderBtd();
     renderYield();
