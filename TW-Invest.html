@@ -90,9 +90,47 @@
       <h1>TW-Invest 🌱</h1>
       <p>Weltwirtschaft (70/10) + Reserve (20) · Stand <span id="stamp"></span></p>
     </div>
-    <button onclick="document.getElementById('daten-modal').style.display='flex'"
-      style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;margin-top:2px;">Berrechnungsdaten</button>
+    <div style="display:flex;gap:8px;margin-top:2px;">
+      <button onclick="openKalkulation()"
+        style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;">Kalkulation</button>
+      <button onclick="document.getElementById('daten-modal').style.display='flex'"
+        style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;">Berrechnungsdaten</button>
+    </div>
   </header>
+
+  <!-- Kalkulation-Modal -->
+  <div id="kalk-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;width:360px;display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:15px;font-weight:600;color:var(--ink);">Kalkulation</span>
+        <button onclick="document.getElementById('kalk-modal').style.display='none'"
+          style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Monatliche Sparrate</label>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <input id="kalk-sparrate" type="text" value="500,00" onblur="autoFmt(this); renderKalkulation()"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
+          <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
+          <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
+          <button id="kalk-r10" onclick="setRendite(10)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">10 %</button>
+          <button id="kalk-r11" onclick="setRendite(11)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">11 %</button>
+          <button id="kalk-r12" onclick="setRendite(12)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">12 %</button>
+        </div>
+      </div>
+
+      <div id="kalk-result"></div>
+    </div>
+  </div>
 
   <!-- Berechnungsdaten-Modal -->
   <div id="daten-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;">
@@ -475,6 +513,86 @@
   });
 
   renderBtd();
+
+  // ── Kalkulation ──────────────────────────────────────────────
+  const GEBURT = new Date(1987, 11, 10); // 10.12.1987
+  let kalkRendite = 9;
+
+  function meilensteinDatum(alter) {
+    return new Date(GEBURT.getFullYear() + alter, GEBURT.getMonth(), GEBURT.getDate());
+  }
+
+  function monateVonHeute(datum) {
+    const heute = new Date();
+    return Math.max(0, (datum.getFullYear() - heute.getFullYear()) * 12 + (datum.getMonth() - heute.getMonth()) +
+      (datum.getDate() >= heute.getDate() ? 0 : -1));
+  }
+
+  function fvCalc(pv, pmtMonatlich, jahreszins, monate) {
+    if (monate <= 0) return pv;
+    const r = Math.pow(1 + jahreszins / 100, 1 / 12) - 1;
+    if (r === 0) return pv + pmtMonatlich * monate;
+    return pv * Math.pow(1 + r, monate) + pmtMonatlich * (Math.pow(1 + r, monate) - 1) / r;
+  }
+
+  function setRendite(r) {
+    kalkRendite = r;
+    [7,8,9,10,11,12].forEach(x => {
+      const b = document.getElementById('kalk-r' + x);
+      b.style.background = x === r ? 'var(--accent)' : 'var(--bg)';
+      b.style.color      = x === r ? '#fff'          : 'var(--muted)';
+      b.style.borderColor= x === r ? 'var(--accent)' : 'var(--line)';
+    });
+    renderKalkulation();
+  }
+
+  function renderKalkulation() {
+    const sparrate  = parseEuro('kalk-sparrate');
+    const wwSpar    = sparrate * 0.8;
+    const tgSpar    = sparrate * 0.2;
+    const wwAktuell = parseEuro('wert-etf1') + parseEuro('wert-etf2');
+    const tgAktuell = parseEuro('wert-tg');
+    const y1  = parseYield('yield-etf1');
+    const y2  = parseYield('yield-etf2');
+    const yTG = parseYield('yield-tg');
+    const taxRaw = parseFloat(document.getElementById('tax-input').value.replace(',','.'));
+    const taxPct = isNaN(taxRaw) ? 27.5 : Math.max(0, Math.min(99, taxRaw));
+    const netto  = 1 - taxPct / 100;
+    const e1 = parseEuro('wert-etf1'), e2 = parseEuro('wert-etf2');
+    const wwYield = wwAktuell > 0 ? (e1 * y1 + e2 * y2) / wwAktuell : y1;
+
+    const meilensteine = [40, 45, 50].map(alter => {
+      const datum  = meilensteinDatum(alter);
+      const monate = monateVonHeute(datum);
+      const ww = fvCalc(wwAktuell, wwSpar, kalkRendite, monate);
+      const tg = fvCalc(tgAktuell, tgSpar, yTG,         monate);
+      const ausWW = ww * wwYield / 100 / 12 * netto;
+      const ausTG = tg * yTG    / 100 / 12 * netto;
+      return { alter, datum, ww, tg, ausWW, ausTG };
+    });
+
+    const rowStyle = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;';
+    const hdStyle  = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:0 0 8px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);';
+
+    document.getElementById('kalk-result').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="${hdStyle}">
+          <span>Alter</span><span style="text-align:right">Weltwirtschaft</span><span style="text-align:right">Tagesgeld</span>
+        </div>
+        ${meilensteine.map(m => `
+        <div style="${rowStyle}">
+          <span style="color:var(--ink);font-weight:600;">${m.alter} Jahre<br><span style="font-size:11px;color:var(--muted);font-weight:400;">${m.datum.toLocaleDateString('de-DE',{month:'2-digit',year:'numeric'})}</span></span>
+          <span style="text-align:right;color:var(--ink);" class="num">${fmtEuro(m.ww)} €<br><span style="font-size:11px;color:var(--accent);">${fmtEuro(m.ausWW)} € / Mo.</span></span>
+          <span style="text-align:right;color:var(--ink);" class="num">${fmtEuro(m.tg)} €<br><span style="font-size:11px;color:#C9A84C;">${fmtEuro(m.ausTG)} € / Mo.</span></span>
+        </div>`).join('')}
+      </div>`;
+  }
+
+  function openKalkulation() {
+    setRendite(kalkRendite);
+    renderKalkulation();
+    document.getElementById('kalk-modal').style.display = 'flex';
+  }
 </script>
 </body>
 </html>
