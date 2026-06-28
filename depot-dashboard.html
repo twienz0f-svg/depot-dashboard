@@ -334,7 +334,7 @@
     const raw = document.getElementById('refhoch-input').value.replace(/[.,\s]/g,'');
     const refhoch = parseFloat(raw);
     if (isNaN(refhoch) || refhoch <= 0) return;
-    document.getElementById('btd-refhoch-display').textContent = fmt(refhoch);
+    document.getElementById('btd-refhoch-display').textContent = fmtEuro(refhoch);
     const WW = getWW();
     const diff = WW - refhoch;
     const diffEl = document.getElementById('btd-ath-diff');
