@@ -366,6 +366,7 @@
       </div>`;
     }).join('');
 
+    localStorage.setItem('btd-refhoch', refhoch);
   }
 
   function fmtEuro(n) {
@@ -424,6 +425,10 @@
     if (cards[1]) cards[1].textContent = fmtEuro(total) + ' €';
     if (cards[2]) cards[2].textContent = fmtEuro(total * 12) + ' €';
 
+    localStorage.setItem('yield-etf1', y1);
+    localStorage.setItem('yield-etf2', y2);
+    localStorage.setItem('yield-tg', yTG);
+    localStorage.setItem('tax-pct', taxPct);
   }
 
   function autoFmt(el) {
@@ -438,10 +443,26 @@
     return parseFloat(n).toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
   }
 
+  // Gespeicherte Werte laden
+  const saved = localStorage.getItem('btd-refhoch');
+  if (saved) document.getElementById('refhoch-input').value = fmtInput(saved);
+
+  ['etf1','etf2','tg'].forEach(k => {
+    const wv = localStorage.getItem('wert-' + k);
+    if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
+    const yw = localStorage.getItem('yield-' + k);
+    if (yw) document.getElementById('yield-' + k).value = String(yw).replace('.', ',');
+  });
+  const savedTax = localStorage.getItem('tax-pct');
+  if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
+
   renderWerte();
   renderYield();
 
   function saveAll() {
+    ['etf1','etf2','tg'].forEach(k => {
+      localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
+    });
     renderWerte();
     renderBtd();
     renderYield();
