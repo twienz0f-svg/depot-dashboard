@@ -451,10 +451,10 @@
     const wv = localStorage.getItem('wert-' + k);
     if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
     const yw = localStorage.getItem('yield-' + k);
-    if (yw) document.getElementById('yield-' + k).value = String(yw).replace('.', ',');
+    if (yw) document.getElementById('yield-' + k).value = fmtInput(parseFloat(yw));
   });
   const savedTax = localStorage.getItem('tax-pct');
-  if (savedTax) document.getElementById('tax-input').value = String(savedTax).replace('.', ',');
+  if (savedTax) document.getElementById('tax-input').value = fmtInput(parseFloat(savedTax));
 
   renderWerte();
   renderYield();
