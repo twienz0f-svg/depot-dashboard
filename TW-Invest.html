@@ -239,15 +239,28 @@
   <section class="panel">
     <h2>Frühpension</h2>
     <p class="hint">Weg zur Million</p>
-    <div style="margin-bottom:10px;">
+    <div style="margin-bottom:6px;position:relative;">
       <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;overflow:hidden;height:22px;">
         <div id="fire-bar" style="height:100%;background:linear-gradient(90deg,#2A78D6,#3DB584);border-radius:8px;transition:width .4s;"></div>
       </div>
+      <div style="position:absolute;inset:0;display:flex;pointer-events:none;">
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;border-right:1px solid rgba(255,255,255,0.08);"></div>
+        <div style="flex:1;"></div>
+      </div>
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);">
-      <span>0 €</span>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-bottom:6px;">
+      <span>0</span><span>100k</span><span>200k</span><span>300k</span><span>400k</span><span>500k</span><span>600k</span><span>700k</span><span>800k</span><span>900k</span><span>1M</span>
+    </div>
+    <div style="text-align:center;font-size:13px;">
       <span id="fire-label" class="num" style="color:var(--ink);font-weight:600;"></span>
-      <span class="num">1.000.000 €</span>
     </div>
   </section>
 
