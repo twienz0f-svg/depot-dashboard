@@ -539,7 +539,8 @@
 
   renderWerte();
   renderYield();
-  loadSettings(); // GitHub sync im Hintergrund (überschreibt localStorage bei neueren Werten)
+  // GitHub nur laden wenn noch keine lokalen Settings vorhanden (z.B. erstes Gerät / Inkognito)
+  if (!localStorage.getItem('s-btd-refhoch')) loadSettings();
 
   // Token beim Öffnen des Modals laden
   document.querySelector('[onclick*="daten-modal"]').addEventListener('click', () => {
