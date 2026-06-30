@@ -522,6 +522,9 @@
 
   function getSettings() {
     return {
+      'wert-etf1':    document.getElementById('wert-etf1').value,
+      'wert-etf2':    document.getElementById('wert-etf2').value,
+      'wert-tg':      document.getElementById('wert-tg').value,
       'btd-refhoch':  document.getElementById('refhoch-input').value,
       'yield-etf1':   document.getElementById('yield-etf1').value,
       'yield-etf2':   document.getElementById('yield-etf2').value,
@@ -573,6 +576,9 @@
   }
 
   function applySettings(s) {
+    if (s['wert-etf1'])     document.getElementById('wert-etf1').value = s['wert-etf1'];
+    if (s['wert-etf2'])     document.getElementById('wert-etf2').value = s['wert-etf2'];
+    if (s['wert-tg'])       document.getElementById('wert-tg').value = s['wert-tg'];
     if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
     if (s['yield-etf1'])    document.getElementById('yield-etf1').value = s['yield-etf1'];
     if (s['yield-etf2'])    document.getElementById('yield-etf2').value = s['yield-etf2'];
