@@ -578,23 +578,24 @@
         body: JSON.stringify({ message: 'Settings update', content, sha })
       });
       const ok = put.ok;
-      status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler: ' + put.status;
+      const errText = ok ? '' : await put.text();
+      status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler ' + put.status;
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
-      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler beim Speichern: ' + put.status, ok ? 'var(--accent)' : 'var(--down)');
+      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler ' + put.status + ': ' + errText.slice(0,80), ok ? 'var(--accent)' : 'var(--down)', !ok);
     } catch(e) {
-      status.textContent = '✗ Netzwerkfehler';
+      status.textContent = '✗ ' + e.message;
       status.style.color = 'var(--down)';
-      showToast('✗ Netzwerkfehler beim Speichern', 'var(--down)');
+      showToast('✗ ' + e.message, 'var(--down)', true);
     }
   }
 
-  function showToast(msg, color) {
+  function showToast(msg, color, persist) {
     const t = document.getElementById('toast');
     t.textContent = msg;
     t.style.color = color || 'var(--ink)';
     t.style.display = 'block';
     clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.style.display = 'none', 3000);
+    if (!persist) t._timer = setTimeout(() => t.style.display = 'none', 3000);
   }
 
   async function saveAll() {
@@ -613,14 +614,11 @@
   }
 
   async function loadSettings() {
-    const token = localStorage.getItem('gh-token');
-    if (!token) return;
     try {
-      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
-      const res = await fetch(api, { headers: { Authorization: 'token ' + token } });
+      const url = 'https://raw.githubusercontent.com/twienz0f-svg/depot-dashboard/main/settings.json?_=' + Date.now();
+      const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) return;
-      const data = await res.json();
-      const s = JSON.parse(atob(data.content));
+      const s = await res.json();
       if (s['btd-refhoch'])   { document.getElementById('refhoch-input').value = s['btd-refhoch']; localStorage.setItem('btd-refhoch', s['btd-refhoch']); }
       if (s['yield-etf1'])    { document.getElementById('yield-etf1').value = s['yield-etf1']; localStorage.setItem('yield-etf1', s['yield-etf1'].replace(',','.')); }
       if (s['yield-etf2'])    { document.getElementById('yield-etf2').value = s['yield-etf2']; localStorage.setItem('yield-etf2', s['yield-etf2'].replace(',','.')); }
