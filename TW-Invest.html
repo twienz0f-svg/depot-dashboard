@@ -528,19 +528,9 @@
     if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
   });
 
-  // Settings aus localStorage laden (sofort, kein Cache-Problem)
-  const SKEYS = ['btd-refhoch','yield-etf1','yield-etf2','yield-tg','tax-pct','kalk-sparrate','kalk-rendite'];
-  const SIDS  = {'btd-refhoch':'refhoch-input','yield-etf1':'yield-etf1','yield-etf2':'yield-etf2','yield-tg':'yield-tg','tax-pct':'tax-input','kalk-sparrate':'kalk-sparrate'};
-  SKEYS.forEach(k => {
-    const v = localStorage.getItem('s-' + k);
-    if (v && SIDS[k]) document.getElementById(SIDS[k]).value = v;
-    if (k === 'kalk-rendite' && v) { kalkRendite = parseInt(v); }
-  });
-
   renderWerte();
   renderYield();
-  // GitHub nur laden wenn noch keine lokalen Settings vorhanden (z.B. erstes Gerät / Inkognito)
-  if (!localStorage.getItem('s-btd-refhoch')) loadSettings();
+  loadSettings();
 
   // Token beim Öffnen des Modals laden
   document.querySelector('[onclick*="daten-modal"]').addEventListener('click', () => {
@@ -572,24 +562,19 @@
     try {
       let sha = '';
       const get = await fetch(api, { headers: { Authorization: 'token ' + token } });
-      console.log('GET status:', get.status);
-      if (get.ok) { const d = await get.json(); sha = d.sha; console.log('SHA:', sha); }
-      const body = JSON.stringify(settings, null, 2);
-      console.log('Settings to save:', body);
-      const content = btoa(unescape(encodeURIComponent(body)));
+      if (get.ok) { const d = await get.json(); sha = d.sha; }
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
       const put = await fetch(api, {
         method: 'PUT',
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'Settings update', content, sha })
       });
-      const putText = await put.text();
-      console.log('PUT status:', put.status, putText.slice(0, 200));
       const ok = put.ok;
+      const errText = ok ? '' : await put.text();
       status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler ' + put.status;
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
-      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ ' + put.status + ': ' + putText.slice(0, 60), ok ? 'var(--accent)' : 'var(--down)', !ok);
+      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ ' + put.status + ': ' + errText.slice(0, 60), ok ? 'var(--accent)' : 'var(--down)', !ok);
     } catch(e) {
-      console.error('pushSettings error:', e);
       showToast('✗ ' + e.message, 'var(--down)', true);
     }
   }
@@ -603,35 +588,27 @@
     if (!persist) t._timer = setTimeout(() => t.style.display = 'none', 3000);
   }
 
-  function saveSettingsToLocal(s) {
-    Object.keys(s).forEach(k => localStorage.setItem('s-' + k, s[k]));
-  }
-
   async function saveAll() {
     showToast('… wird gespeichert', 'var(--muted)');
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
-    const s = getSettings();
-    saveSettingsToLocal(s);
     renderWerte();
     renderBtd();
     renderYield();
-    await pushSettingsToGitHub(s);
+    await pushSettingsToGitHub(getSettings());
     setTimeout(() => { document.getElementById('daten-modal').style.display = 'none'; }, 1200);
   }
 
   async function loadSettings() {
+    const token = localStorage.getItem('gh-token');
+    if (!token) return;
     try {
-      const token = localStorage.getItem('gh-token');
-      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?_=' + Date.now();
-      const headers = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
-      if (token) headers['Authorization'] = 'token ' + token;
-      const res = await fetch(api, { cache: 'no-store', headers });
+      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
+      const res = await fetch(api, { cache: 'no-store', headers: { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' } });
       if (!res.ok) return;
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
-      saveSettingsToLocal(s);
       if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
       if (s['yield-etf1'])    document.getElementById('yield-etf1').value = s['yield-etf1'];
       if (s['yield-etf2'])    document.getElementById('yield-etf2').value = s['yield-etf2'];
@@ -734,9 +711,7 @@
 
   async function saveKalkulation() {
     showToast('… wird gespeichert', 'var(--muted)');
-    const s = getSettings();
-    saveSettingsToLocal(s);
-    await pushSettingsToGitHub(s);
+    await pushSettingsToGitHub(getSettings());
     document.getElementById('kalk-modal').style.display = 'none';
   }
 
