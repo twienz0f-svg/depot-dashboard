@@ -8,10 +8,7 @@ Wenn der Benutzer „Depot" schreibt:
 
 1. Hole aktuelle Positionswerte aus Parqet mit `parqet_query_portfolio` (view="holdings", portfolioId "682875b85bf20f788484a2b4")
 2. Extrahiere ETF1 (nickname "Vanguard FTSE All-World"), ETF2 (nickname "L&G Global Dividends"), TG (nickname "TR Tagesgeld")
-3. Aktualisiere die 3 Werte `wert-etf1`, `wert-etf2`, `wert-tg` an **beiden** Stellen:
-   - `settings.json` (maßgeblich für den Sync; übrige Felder unverändert lassen)
-   - `TW-Invest.html`: die `value`-Attribute der Inputs `wert-etf1`/`wert-etf2`/`wert-tg` (Fallback) + `data-parqet-ts` auf `wert-etf1` auf den aktuellen Zeitstempel setzen
-   - Nichts anderes im HTML anfassen (Donut, Tabelle, Rebalancing, VAL_-Konstanten, `btd-ww` werden automatisch berechnet)
+3. Aktualisiere die 3 Werte `wert-etf1`, `wert-etf2`, `wert-tg` ausschließlich in `settings.json` (maßgebliche Quelle, übrige Felder unverändert lassen). Das HTML hat keine Standardwerte mehr — dort nichts anpassen (Donut, Tabelle, Rebalancing, VAL_-Konstanten, `btd-ww` werden beim Laden automatisch aus settings.json berechnet).
 4. Committe mit Nachricht "Parqet-Update: [heutiges Datum]" und pushe zu GitHub (origin main)
 5. Keine Tabelle ausgeben, keine Erklärung, kein Kommentar zu Börsenzeiten — immer aktualisieren und nur "✓ Dashboard aktualisiert ([Datum])" melden
 

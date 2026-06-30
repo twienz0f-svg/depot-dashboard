@@ -115,7 +115,7 @@
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">Monatliche Sparrate</label>
         <div style="display:flex;align-items:center;gap:8px;">
-          <input id="kalk-sparrate" type="text" value="500,00" onblur="autoFmt(this); renderKalkulation()"
+          <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
         </div>
@@ -152,7 +152,7 @@
         <label style="font-size:12px;color:var(--muted);">Letztes ATH</label>
         <div style="display:grid;grid-template-columns:1fr 110px 16px;gap:8px;align-items:center;">
           <span></span>
-          <input id="refhoch-input" type="text" value="102.000,00" onblur="autoFmt(this)"
+          <input id="refhoch-input" type="text" value="" onblur="autoFmt(this)"
             style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
@@ -162,13 +162,13 @@
         <label style="font-size:12px;color:var(--muted);">Aktueller Wert</label>
         <div style="display:grid;grid-template-columns:1fr 110px 16px;gap:8px;align-items:center;">
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>Vanguard FTSE All-World</span>
-          <input id="wert-etf1" type="text" value="100.375,96" data-parqet-ts="2026-06-29T16:09" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="wert-etf1" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">€</span>
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>L&amp;G Global Dividends</span>
-          <input id="wert-etf2" type="text" value="249,97" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="wert-etf2" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">€</span>
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>TR Tagesgeld</span>
-          <input id="wert-tg" type="text" value="25.014,95" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="wert-tg" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">€</span>
         </div>
       </div>
@@ -177,13 +177,13 @@
         <label style="font-size:12px;color:var(--muted);">Ausschüttungen</label>
         <div style="display:grid;grid-template-columns:1fr 70px 16px;gap:8px;align-items:center;">
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>Vanguard FTSE All-World</span>
-          <input id="yield-etf1" type="text" value="1,50" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="yield-etf1" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">%</span>
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>L&amp;G Global Dividends</span>
-          <input id="yield-etf2" type="text" value="4,00" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="yield-etf2" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">%</span>
           <span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>TR Tagesgeld</span>
-          <input id="yield-tg" type="text" value="2,00" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
+          <input id="yield-tg" type="text" value="" onblur="autoFmt(this)" style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">%</span>
         </div>
       </div>
@@ -192,7 +192,7 @@
         <label style="font-size:12px;color:var(--muted);">Steuer</label>
         <div style="display:grid;grid-template-columns:1fr 110px 16px;gap:8px;align-items:center;">
           <span></span>
-          <input id="tax-input" type="text" value="27,50" onblur="autoFmt(this)"
+          <input id="tax-input" type="text" value="" onblur="autoFmt(this)"
             style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;width:100%;">
           <span style="color:var(--muted);font-size:13px;">%</span>
         </div>
@@ -509,10 +509,11 @@
     return parseFloat(n).toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
   }
 
-  // Depot-Werte (wert-*) kommen direkt aus dem HTML (von Parqet/Git), kein localStorage
+  // Keine HTML-Standardwerte: alle Werte (Positionen + Einstellungen) kommen aus settings.json (Git).
+  // Eager-Render zeigt kurz leere/0-Werte, bis loadSettings die echten Werte aus Git eingetragen hat.
   renderWerte();
   renderYield();
-  loadSettings(); // Einstellungen kommen aus settings.json (Git)
+  loadSettings();
 
   // Token beim Öffnen des Modals laden
   document.querySelector('[onclick*="daten-modal"]').addEventListener('click', () => {
@@ -601,7 +602,7 @@
       try {
       const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?ref=main&_=' + Date.now();
       const res = await fetch(api, { cache: 'no-store' });
-      if (!res.ok) return;
+      if (!res.ok) { showToast('✗ Laden fehlgeschlagen (HTTP ' + res.status + ')', 'var(--down)', true); return; }
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
       applySettings(s);
