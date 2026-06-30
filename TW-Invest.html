@@ -622,9 +622,6 @@
       const res = await fetch(url);
       if (!res.ok) return;
       const s = await res.json();
-      const newHash = JSON.stringify(s);
-      if (newHash === localStorage.getItem('settings-hash')) return;
-      localStorage.setItem('settings-hash', newHash);
       applySettings(s);
     } catch(e) {}
   }
