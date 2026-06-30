@@ -516,29 +516,21 @@
     return parseFloat(n).toLocaleString('de-DE', {minimumFractionDigits:0, maximumFractionDigits:0});
   }
 
-  // Gespeicherte Werte laden
-  const saved = localStorage.getItem('btd-refhoch');
-  if (saved) document.getElementById('refhoch-input').value = fmtInput(saved);
-
+  // Parqet-Timestamp: wert-* aus localStorage nur laden wenn noch aktuell
   const htmlTs = document.getElementById('wert-etf1').dataset.parqetTs;
   const storedTs = localStorage.getItem('parqet-ts');
   if (htmlTs !== storedTs) {
     ['etf1','etf2','tg'].forEach(k => localStorage.removeItem('wert-' + k));
     localStorage.setItem('parqet-ts', htmlTs);
   }
-
   ['etf1','etf2','tg'].forEach(k => {
     const wv = localStorage.getItem('wert-' + k);
     if (wv) document.getElementById('wert-' + k).value = fmtInput(parseFloat(wv.replace(/\./g,'').replace(',','.')));
-    const yw = localStorage.getItem('yield-' + k);
-    if (yw) document.getElementById('yield-' + k).value = fmtInput(parseFloat(yw));
   });
-  const savedTax = localStorage.getItem('tax-pct');
-  if (savedTax) document.getElementById('tax-input').value = fmtInput(parseFloat(savedTax));
 
   renderWerte();
   renderYield();
-  loadSettings();
+  loadSettings(); // settings.json ist einzige Quelle für Yields, ATH, Steuer, Sparrate, Rendite
 
   // Token beim Öffnen des Modals laden
   document.querySelector('[onclick*="daten-modal"]').addEventListener('click', () => {
@@ -603,9 +595,6 @@
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
-    localStorage.setItem('btd-refhoch', document.getElementById('refhoch-input').value);
-    ['etf1','etf2','tg'].forEach(k => localStorage.setItem('yield-' + k, document.getElementById('yield-' + k).value.replace(',','.')));
-    localStorage.setItem('tax-pct', document.getElementById('tax-input').value.replace(',','.'));
     renderWerte();
     renderBtd();
     renderYield();
@@ -619,11 +608,11 @@
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) return;
       const s = await res.json();
-      if (s['btd-refhoch'])   { document.getElementById('refhoch-input').value = s['btd-refhoch']; localStorage.setItem('btd-refhoch', s['btd-refhoch']); }
-      if (s['yield-etf1'])    { document.getElementById('yield-etf1').value = s['yield-etf1']; localStorage.setItem('yield-etf1', s['yield-etf1'].replace(',','.')); }
-      if (s['yield-etf2'])    { document.getElementById('yield-etf2').value = s['yield-etf2']; localStorage.setItem('yield-etf2', s['yield-etf2'].replace(',','.')); }
-      if (s['yield-tg'])      { document.getElementById('yield-tg').value = s['yield-tg']; localStorage.setItem('yield-tg', s['yield-tg'].replace(',','.')); }
-      if (s['tax-pct'])       { document.getElementById('tax-input').value = s['tax-pct']; localStorage.setItem('tax-pct', s['tax-pct'].replace(',','.')); }
+      if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
+      if (s['yield-etf1'])   document.getElementById('yield-etf1').value = s['yield-etf1'];
+      if (s['yield-etf2'])   document.getElementById('yield-etf2').value = s['yield-etf2'];
+      if (s['yield-tg'])     document.getElementById('yield-tg').value = s['yield-tg'];
+      if (s['tax-pct'])      document.getElementById('tax-input').value = s['tax-pct'];
       if (s['kalk-sparrate'])  document.getElementById('kalk-sparrate').value = s['kalk-sparrate'];
       if (s['kalk-rendite'])   kalkRendite = s['kalk-rendite'];
       renderWerte(); renderBtd(); renderYield();
