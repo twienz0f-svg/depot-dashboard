@@ -554,9 +554,13 @@
   }
 
   async function pushSettingsToGitHub(settings) {
-    const token = localStorage.getItem('gh-token');
-    if (!token) return;
+    const tokenEl = document.getElementById('gh-token');
+    const token = tokenEl.value.trim() || localStorage.getItem('gh-token');
     const status = document.getElementById('gh-status');
+    if (!token) { status.textContent = '⚠ Kein Token eingetragen'; status.style.color = 'var(--up)'; return; }
+    localStorage.setItem('gh-token', token);
+    status.textContent = '… wird gespeichert';
+    status.style.color = 'var(--muted)';
     const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
     try {
       let sha = '';
@@ -576,18 +580,18 @@
     }
   }
 
-  function saveAll() {
+  async function saveAll() {
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
     localStorage.setItem('btd-refhoch', document.getElementById('refhoch-input').value);
     ['etf1','etf2','tg'].forEach(k => localStorage.setItem('yield-' + k, document.getElementById('yield-' + k).value.replace(',','.')));
     localStorage.setItem('tax-pct', document.getElementById('tax-input').value.replace(',','.'));
-    pushSettingsToGitHub(getSettings());
     renderWerte();
     renderBtd();
     renderYield();
-    document.getElementById('daten-modal').style.display = 'none';
+    await pushSettingsToGitHub(getSettings());
+    setTimeout(() => { document.getElementById('daten-modal').style.display = 'none'; }, 1200);
   }
 
   async function loadSettings() {
