@@ -633,7 +633,8 @@
       const s = JSON.parse(atob(fileData.content.replace(/\n/g,'')));
       localStorage.setItem('settings-sha', commitSha);
       applySettings(s);
-    } catch(e) {}
+      showToast('✓ Sync: ' + (s['btd-refhoch'] || '?'), 'var(--accent)');
+    } catch(e) { showToast('✗ Sync-Fehler: ' + e.message, 'var(--down)', true); }
   }
 
   // Modal mit Klick außerhalb schließen
