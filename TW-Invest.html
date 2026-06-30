@@ -623,9 +623,12 @@
   }
 
   async function loadSettings() {
-      try {
+    try {
+      // Mit Token: 5.000 Anfragen/Std statt 60 (vermeidet HTTP 403 Rate-Limit)
+      const token = localStorage.getItem('gh-token');
+      const headers = token ? { 'Authorization': 'token ' + token } : {};
       const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?ref=main&_=' + Date.now();
-      const res = await fetch(api, { cache: 'no-store' });
+      const res = await fetch(api, { cache: 'no-store', headers });
       if (!res.ok) { showToast('✗ Laden fehlgeschlagen (HTTP ' + res.status + ')', 'var(--down)', true); return; }
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
