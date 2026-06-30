@@ -616,22 +616,16 @@
     // Sofort aus localStorage-Cache laden
     const cached = localStorage.getItem('settings-cache');
     if (cached) { try { applySettings(JSON.parse(cached)); } catch(e) {} }
-    // GitHub laden: erst aktuellen Commit-SHA holen (nicht gecacht), dann Datei mit diesem ref
-    const token = localStorage.getItem('gh-token');
-    if (!token) return;
+    // GitHub laden via raw.githubusercontent.com (kein Auth nötig, kein CORS-Problem)
     try {
-      const h = { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' };
-      const refRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/branches/main', { cache: 'no-store', headers: h });
-      if (!refRes.ok) return;
-      const refData = await refRes.json();
-      const commitSha = refData.commit.sha;
-      const cachedSha = localStorage.getItem('settings-sha');
-      if (commitSha === cachedSha) return; // Kein Update nötig
-      const fileRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?ref=' + commitSha, { cache: 'no-store', headers: h });
-      if (!fileRes.ok) return;
-      const fileData = await fileRes.json();
-      const s = JSON.parse(atob(fileData.content.replace(/\n/g,'')));
-      localStorage.setItem('settings-sha', commitSha);
+      const url = 'https://raw.githubusercontent.com/twienz0f-svg/depot-dashboard/main/settings.json?_=' + Date.now();
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) return;
+      const s = await res.json();
+      const newHash = JSON.stringify(s);
+      const cachedHash = localStorage.getItem('settings-hash');
+      if (newHash === cachedHash) return; // Keine Änderung
+      localStorage.setItem('settings-hash', newHash);
       applySettings(s);
       showToast('✓ Sync: ' + (s['btd-refhoch'] || '?'), 'var(--accent)');
     } catch(e) { showToast('✗ Sync-Fehler: ' + e.message, 'var(--down)', true); }
