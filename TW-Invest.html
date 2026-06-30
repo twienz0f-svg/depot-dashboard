@@ -83,6 +83,8 @@
 </style>
 </head>
 <body>
+<div id="toast" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 20px;font-size:13px;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,0.4);"></div>
+
 <div class="wrap">
 
   <header class="top" style="display:flex;justify-content:space-between;align-items:flex-start;">
@@ -572,12 +574,24 @@
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'Settings update', content, sha })
       });
-      status.textContent = put.ok ? '✓ Gespeichert auf allen Geräten' : '✗ Fehler: ' + put.status;
-      status.style.color = put.ok ? 'var(--accent)' : 'var(--down)';
+      const ok = put.ok;
+      status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler: ' + put.status;
+      status.style.color = ok ? 'var(--accent)' : 'var(--down)';
+      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler beim Speichern: ' + put.status, ok ? 'var(--accent)' : 'var(--down)');
     } catch(e) {
       status.textContent = '✗ Netzwerkfehler';
       status.style.color = 'var(--down)';
+      showToast('✗ Netzwerkfehler beim Speichern', 'var(--down)');
     }
+  }
+
+  function showToast(msg, color) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.color = color || 'var(--ink)';
+    t.style.display = 'block';
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.style.display = 'none', 3000);
   }
 
   async function saveAll() {
