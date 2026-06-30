@@ -542,7 +542,7 @@
     status.style.color = 'var(--muted)';
     const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
     const doPut = async () => {
-      const get = await fetch(api + '?ref=main&_=' + Date.now(), { headers: { Authorization: 'token ' + token, 'Cache-Control': 'no-cache' } });
+      const get = await fetch(api + '?ref=main&_=' + Date.now(), { headers: { Authorization: 'token ' + token } });
       const sha = get.ok ? (await get.json()).sha : '';
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
       return fetch(api, {
