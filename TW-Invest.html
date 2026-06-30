@@ -560,19 +560,20 @@
     status.textContent = '… wird gespeichert';
     status.style.color = 'var(--muted)';
     const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
-    try {
-      let sha = '';
-      const get = await fetch(api + '?ref=main', { headers: { Authorization: 'token ' + token } });
-      if (get.ok) { const d = await get.json(); sha = d.sha; }
+    const doPut = async () => {
+      const get = await fetch(api + '?ref=main&_=' + Date.now(), { headers: { Authorization: 'token ' + token, 'Cache-Control': 'no-cache' } });
+      const sha = get.ok ? (await get.json()).sha : '';
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
-      const put = await fetch(api, {
+      return fetch(api, {
         method: 'PUT',
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'Settings update', content, sha, branch: 'main' })
       });
-      const putData = await put.json().catch(() => null);
+    };
+    try {
+      let put = await doPut();
+      if (put.status === 409) put = await doPut(); // SHA veraltet → einmal wiederholen
       const ok = put.ok;
-      if (ok && putData && putData.content) localStorage.setItem('settings-sha', putData.content.sha);
       status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler ' + put.status;
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
       showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler ' + put.status, ok ? 'var(--accent)' : 'var(--down)', !ok);
