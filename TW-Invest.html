@@ -562,21 +562,24 @@
     try {
       let sha = '';
       const get = await fetch(api, { headers: { Authorization: 'token ' + token } });
-      if (get.ok) { const d = await get.json(); sha = d.sha; }
-      const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
+      console.log('GET status:', get.status);
+      if (get.ok) { const d = await get.json(); sha = d.sha; console.log('SHA:', sha); }
+      const body = JSON.stringify(settings, null, 2);
+      console.log('Settings to save:', body);
+      const content = btoa(unescape(encodeURIComponent(body)));
       const put = await fetch(api, {
         method: 'PUT',
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'Settings update', content, sha })
       });
+      const putText = await put.text();
+      console.log('PUT status:', put.status, putText.slice(0, 200));
       const ok = put.ok;
-      const errText = ok ? '' : await put.text();
       status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler ' + put.status;
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
-      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler ' + put.status + ': ' + errText.slice(0,80), ok ? 'var(--accent)' : 'var(--down)', !ok);
+      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ ' + put.status + ': ' + putText.slice(0, 60), ok ? 'var(--accent)' : 'var(--down)', !ok);
     } catch(e) {
-      status.textContent = '✗ ' + e.message;
-      status.style.color = 'var(--down)';
+      console.error('pushSettings error:', e);
       showToast('✗ ' + e.message, 'var(--down)', true);
     }
   }
