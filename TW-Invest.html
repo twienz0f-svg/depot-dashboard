@@ -617,19 +617,16 @@
     const cached = localStorage.getItem('settings-cache');
     if (cached) { try { applySettings(JSON.parse(cached)); } catch(e) {} }
     // GitHub laden via raw.githubusercontent.com (kein Auth nötig, kein CORS-Problem)
-    showToast('Sync läuft…', 'var(--muted)');
     try {
       const url = 'https://raw.githubusercontent.com/twienz0f-svg/depot-dashboard/main/settings.json?_=' + Date.now();
       const res = await fetch(url);
-      if (!res.ok) { showToast('✗ HTTP ' + res.status, 'var(--down)', true); return; }
+      if (!res.ok) return;
       const s = await res.json();
       const newHash = JSON.stringify(s);
-      const cachedHash = localStorage.getItem('settings-hash');
-      if (newHash === cachedHash) { showToast('✓ Bereits aktuell', 'var(--muted)'); return; }
+      if (newHash === localStorage.getItem('settings-hash')) return;
       localStorage.setItem('settings-hash', newHash);
       applySettings(s);
-      showToast('✓ Sync: ' + (s['btd-refhoch'] || '?'), 'var(--accent)');
-    } catch(e) { showToast('✗ ' + e.message, 'var(--down)', true); }
+    } catch(e) {}
   }
 
   // Modal mit Klick außerhalb schließen
