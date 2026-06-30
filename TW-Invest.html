@@ -79,9 +79,33 @@
   footer{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.6;}
 
   @media(max-width:560px){
+    body{padding:20px 14px 48px;}
+
+    .cards{grid-template-columns:1fr 1fr;gap:10px;}
+    .cards .card:first-child{grid-column:1/-1;}
+    .card{padding:13px 15px;}
+    .card .val{font-size:24px;}
+
+    section.panel{padding:16px;}
+    section.panel .hint{flex-wrap:wrap;}
+
     .alloc{grid-template-columns:1fr;justify-items:center;}
+
     .rung{grid-template-columns:48px 1fr;}
     .rung .meta{grid-column:2;text-align:left;}
+
+    /* Rebalancing: Name + Balken voll, Zahlen darunter in 3 Spalten */
+    .rebal-row{grid-template-columns:1fr 1fr 1fr;gap:7px 10px;}
+    .rebal-row > :nth-child(1){grid-column:1 / -1;}
+    .rebal-row > :nth-child(2){grid-column:1 / -1;}
+    .rebal-row > :nth-child(3){text-align:left !important;}
+    .rebal-row > :nth-child(4){text-align:center !important;}
+    .rebal-row > :nth-child(5){text-align:right !important;}
+
+    /* Frühpension-Beschriftungen kompakter */
+    .fire-ticks{font-size:9px !important;letter-spacing:-.3px;}
+
+    .legend{gap:12px;font-size:12.5px;}
   }
 </style>
 </head>
@@ -105,7 +129,7 @@
 
   <!-- Kalkulation-Modal -->
   <div id="kalk-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;width:360px;display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(360px,calc(100vw - 28px));display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:15px;font-weight:600;color:var(--ink);">FIRE</span>
         <button onclick="document.getElementById('kalk-modal').style.display='none'"
@@ -141,7 +165,7 @@
 
   <!-- Berechnungsdaten-Modal -->
   <div id="daten-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;width:320px;display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(360px,calc(100vw - 28px));display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:15px;font-weight:600;color:var(--ink);">Berechnungsdaten</span>
         <button onclick="document.getElementById('daten-modal').style.display='none'"
@@ -268,7 +292,7 @@
         <div style="flex:1;"></div>
       </div>
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-bottom:6px;">
+    <div class="fire-ticks" style="display:flex;justify-content:space-between;font-size:11px;color:var(--faint);margin-bottom:6px;">
       <span>0</span><span>100k</span><span>200k</span><span>300k</span><span>400k</span><span>500k</span><span>600k</span><span>700k</span><span>800k</span><span>900k</span><span>1M</span>
     </div>
     <div style="text-align:center;font-size:13px;">
