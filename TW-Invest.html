@@ -559,7 +559,7 @@
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
       showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler ' + put.status, ok ? 'var(--accent)' : 'var(--down)', !ok);
     } catch(e) {
-      showToast('✗ ' + e.message, 'var(--down)', true);
+      showToast('✗ Speichern: ' + e.message, 'var(--down)', true);
     }
   }
 
@@ -599,7 +599,7 @@
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
       applySettings(s);
-    } catch(e) {}
+    } catch(e) { showToast('✗ Laden: ' + e.message, 'var(--down)', true); }
   }
 
   // Modal mit Klick außerhalb schließen
