@@ -604,10 +604,11 @@
 
   async function loadSettings() {
     try {
-      const url = 'https://raw.githubusercontent.com/twienz0f-svg/depot-dashboard/main/settings.json?_=' + Date.now();
-      const res = await fetch(url, { cache: 'no-store' });
+      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
+      const res = await fetch(api, { cache: 'no-store' });
       if (!res.ok) return;
-      const s = await res.json();
+      const data = await res.json();
+      const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
       if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
       if (s['yield-etf1'])   document.getElementById('yield-etf1').value = s['yield-etf1'];
       if (s['yield-etf2'])   document.getElementById('yield-etf2').value = s['yield-etf2'];
