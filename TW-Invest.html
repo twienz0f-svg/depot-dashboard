@@ -588,19 +588,34 @@
     if (!persist) t._timer = setTimeout(() => t.style.display = 'none', 3000);
   }
 
+  function applySettings(s) {
+    if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
+    if (s['yield-etf1'])    document.getElementById('yield-etf1').value = s['yield-etf1'];
+    if (s['yield-etf2'])    document.getElementById('yield-etf2').value = s['yield-etf2'];
+    if (s['yield-tg'])      document.getElementById('yield-tg').value = s['yield-tg'];
+    if (s['tax-pct'])       document.getElementById('tax-input').value = s['tax-pct'];
+    if (s['kalk-sparrate']) document.getElementById('kalk-sparrate').value = s['kalk-sparrate'];
+    if (s['kalk-rendite'] !== undefined) kalkRendite = parseInt(s['kalk-rendite']);
+    localStorage.setItem('settings-cache', JSON.stringify(s));
+    renderWerte(); renderBtd(); renderYield();
+  }
+
   async function saveAll() {
     showToast('… wird gespeichert', 'var(--muted)');
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
-    renderWerte();
-    renderBtd();
-    renderYield();
-    await pushSettingsToGitHub(getSettings());
+    const s = getSettings();
+    applySettings(s);
+    await pushSettingsToGitHub(s);
     setTimeout(() => { document.getElementById('daten-modal').style.display = 'none'; }, 1200);
   }
 
   async function loadSettings() {
+    // Zuerst localStorage-Cache laden (sofort, kein Netzwerk)
+    const cached = localStorage.getItem('settings-cache');
+    if (cached) { try { applySettings(JSON.parse(cached)); } catch(e) {} }
+    // Dann GitHub laden (für neue Geräte oder wenn Cache fehlt)
     const token = localStorage.getItem('gh-token');
     if (!token) return;
     try {
@@ -609,14 +624,8 @@
       if (!res.ok) return;
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
-      if (s['btd-refhoch'])   document.getElementById('refhoch-input').value = s['btd-refhoch'];
-      if (s['yield-etf1'])    document.getElementById('yield-etf1').value = s['yield-etf1'];
-      if (s['yield-etf2'])    document.getElementById('yield-etf2').value = s['yield-etf2'];
-      if (s['yield-tg'])      document.getElementById('yield-tg').value = s['yield-tg'];
-      if (s['tax-pct'])       document.getElementById('tax-input').value = s['tax-pct'];
-      if (s['kalk-sparrate']) document.getElementById('kalk-sparrate').value = s['kalk-sparrate'];
-      if (s['kalk-rendite'])  kalkRendite = s['kalk-rendite'];
-      renderWerte(); renderBtd(); renderYield();
+      // GitHub nur anwenden wenn kein lokaler Cache vorhanden (neues Gerät)
+      if (!cached) applySettings(s);
     } catch(e) {}
   }
 
@@ -711,7 +720,9 @@
 
   async function saveKalkulation() {
     showToast('… wird gespeichert', 'var(--muted)');
-    await pushSettingsToGitHub(getSettings());
+    const s = getSettings();
+    applySettings(s);
+    await pushSettingsToGitHub(s);
     document.getElementById('kalk-modal').style.display = 'none';
   }
 
