@@ -608,8 +608,8 @@
   async function loadSettings() {
     try {
       const token = localStorage.getItem('gh-token');
-      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
-      const headers = { 'Cache-Control': 'no-cache' };
+      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?_=' + Date.now();
+      const headers = { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' };
       if (token) headers['Authorization'] = 'token ' + token;
       const res = await fetch(api, { cache: 'no-store', headers });
       if (!res.ok) return;
