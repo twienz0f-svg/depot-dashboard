@@ -595,6 +595,7 @@
   }
 
   async function saveAll() {
+    showToast('… wird gespeichert', 'var(--muted)');
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
