@@ -721,9 +721,11 @@
       </div>`;
   }
 
-  function saveKalkulation() {
+  async function saveKalkulation() {
     localStorage.setItem('kalk-sparrate', document.getElementById('kalk-sparrate').value);
     localStorage.setItem('kalk-rendite', kalkRendite);
+    showToast('… wird gespeichert', 'var(--muted)');
+    await pushSettingsToGitHub(getSettings());
     document.getElementById('kalk-modal').style.display = 'none';
   }
 
