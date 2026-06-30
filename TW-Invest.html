@@ -561,13 +561,13 @@
     const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
     try {
       let sha = '';
-      const get = await fetch(api, { headers: { Authorization: 'token ' + token } });
+      const get = await fetch(api + '?ref=main', { headers: { Authorization: 'token ' + token } });
       if (get.ok) { const d = await get.json(); sha = d.sha; }
       const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
       const put = await fetch(api, {
         method: 'PUT',
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Settings update', content, sha })
+        body: JSON.stringify({ message: 'Settings update', content, sha, branch: 'main' })
       });
       const putData = await put.json().catch(() => null);
       const ok = put.ok;
