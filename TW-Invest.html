@@ -604,8 +604,11 @@
 
   async function loadSettings() {
     try {
+      const token = localStorage.getItem('gh-token');
       const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
-      const res = await fetch(api, { cache: 'no-store' });
+      const headers = { 'Cache-Control': 'no-cache' };
+      if (token) headers['Authorization'] = 'token ' + token;
+      const res = await fetch(api, { cache: 'no-store', headers });
       if (!res.ok) return;
       const data = await res.json();
       const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
