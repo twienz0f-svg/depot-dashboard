@@ -616,21 +616,23 @@
     // Sofort aus localStorage-Cache laden
     const cached = localStorage.getItem('settings-cache');
     if (cached) { try { applySettings(JSON.parse(cached)); } catch(e) {} }
-    // GitHub prüfen: SHA vergleichen, bei Unterschied neu laden
+    // GitHub laden: erst aktuellen Commit-SHA holen (nicht gecacht), dann Datei mit diesem ref
     const token = localStorage.getItem('gh-token');
     if (!token) return;
     try {
-      const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
-      const res = await fetch(api, { cache: 'no-store', headers: { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' } });
-      if (!res.ok) return;
-      const data = await res.json();
+      const h = { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' };
+      const refRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/git/refs/heads/main', { cache: 'no-store', headers: h });
+      if (!refRes.ok) return;
+      const refData = await refRes.json();
+      const commitSha = refData.object.sha;
       const cachedSha = localStorage.getItem('settings-sha');
-      if (data.sha !== cachedSha) {
-        // Neuere Version auf GitHub → anwenden und SHA merken
-        const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
-        localStorage.setItem('settings-sha', data.sha);
-        applySettings(s);
-      }
+      if (commitSha === cachedSha) return; // Kein Update nötig
+      const fileRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?ref=' + commitSha, { cache: 'no-store', headers: h });
+      if (!fileRes.ok) return;
+      const fileData = await fileRes.json();
+      const s = JSON.parse(atob(fileData.content.replace(/\n/g,'')));
+      localStorage.setItem('settings-sha', commitSha);
+      applySettings(s);
     } catch(e) {}
   }
 
