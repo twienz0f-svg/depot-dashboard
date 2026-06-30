@@ -621,10 +621,10 @@
     if (!token) return;
     try {
       const h = { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' };
-      const refRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/git/refs/heads/main', { cache: 'no-store', headers: h });
+      const refRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/branches/main', { cache: 'no-store', headers: h });
       if (!refRes.ok) return;
       const refData = await refRes.json();
-      const commitSha = refData.object.sha;
+      const commitSha = refData.commit.sha;
       const cachedSha = localStorage.getItem('settings-sha');
       if (commitSha === cachedSha) return; // Kein Update nötig
       const fileRes = await fetch('https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json?ref=' + commitSha, { cache: 'no-store', headers: h });
