@@ -569,11 +569,12 @@
         headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: 'Settings update', content, sha })
       });
+      const putData = await put.json().catch(() => null);
       const ok = put.ok;
-      const errText = ok ? '' : await put.text();
+      if (ok && putData && putData.content) localStorage.setItem('settings-sha', putData.content.sha);
       status.textContent = ok ? '✓ Gespeichert' : '✗ Fehler ' + put.status;
       status.style.color = ok ? 'var(--accent)' : 'var(--down)';
-      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ ' + put.status + ': ' + errText.slice(0, 60), ok ? 'var(--accent)' : 'var(--down)', !ok);
+      showToast(ok ? '✓ Einstellungen gespeichert' : '✗ Fehler ' + put.status, ok ? 'var(--accent)' : 'var(--down)', !ok);
     } catch(e) {
       showToast('✗ ' + e.message, 'var(--down)', true);
     }
@@ -612,10 +613,10 @@
   }
 
   async function loadSettings() {
-    // Zuerst localStorage-Cache laden (sofort, kein Netzwerk)
+    // Sofort aus localStorage-Cache laden
     const cached = localStorage.getItem('settings-cache');
     if (cached) { try { applySettings(JSON.parse(cached)); } catch(e) {} }
-    // Dann GitHub laden (für neue Geräte oder wenn Cache fehlt)
+    // GitHub prüfen: SHA vergleichen, bei Unterschied neu laden
     const token = localStorage.getItem('gh-token');
     if (!token) return;
     try {
@@ -623,9 +624,13 @@
       const res = await fetch(api, { cache: 'no-store', headers: { 'Authorization': 'token ' + token, 'Cache-Control': 'no-cache' } });
       if (!res.ok) return;
       const data = await res.json();
-      const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
-      // GitHub nur anwenden wenn kein lokaler Cache vorhanden (neues Gerät)
-      if (!cached) applySettings(s);
+      const cachedSha = localStorage.getItem('settings-sha');
+      if (data.sha !== cachedSha) {
+        // Neuere Version auf GitHub → anwenden und SHA merken
+        const s = JSON.parse(atob(data.content.replace(/\n/g,'')));
+        localStorage.setItem('settings-sha', data.sha);
+        applySettings(s);
+      }
     } catch(e) {}
   }
 
