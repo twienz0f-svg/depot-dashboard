@@ -193,6 +193,13 @@
         </div>
       </div>
 
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-size:12px;color:var(--muted);">GitHub Token (einmalig pro Gerät)</label>
+        <input id="gh-token" type="password" placeholder="ghp_..." onchange="localStorage.setItem('gh-token',this.value)"
+          style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:13px;padding:6px 10px;font-family:inherit;">
+        <span id="gh-status" style="font-size:11px;color:var(--muted);"></span>
+      </div>
+
       <button onclick="saveAll()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
     </div>
   </div>
@@ -526,15 +533,77 @@
 
   renderWerte();
   renderYield();
+  loadSettings();
+
+  // Token beim Öffnen des Modals laden
+  document.querySelector('[onclick*="daten-modal"]').addEventListener('click', () => {
+    const t = localStorage.getItem('gh-token');
+    if (t) document.getElementById('gh-token').value = t;
+  });
+
+  function getSettings() {
+    return {
+      'btd-refhoch':  document.getElementById('refhoch-input').value,
+      'yield-etf1':   document.getElementById('yield-etf1').value,
+      'yield-etf2':   document.getElementById('yield-etf2').value,
+      'yield-tg':     document.getElementById('yield-tg').value,
+      'tax-pct':      document.getElementById('tax-input').value,
+      'kalk-sparrate': document.getElementById('kalk-sparrate').value,
+      'kalk-rendite':  kalkRendite
+    };
+  }
+
+  async function pushSettingsToGitHub(settings) {
+    const token = localStorage.getItem('gh-token');
+    if (!token) return;
+    const status = document.getElementById('gh-status');
+    const api = 'https://api.github.com/repos/twienz0f-svg/depot-dashboard/contents/settings.json';
+    try {
+      let sha = '';
+      const get = await fetch(api, { headers: { Authorization: 'token ' + token } });
+      if (get.ok) { const d = await get.json(); sha = d.sha; }
+      const content = btoa(unescape(encodeURIComponent(JSON.stringify(settings, null, 2))));
+      const put = await fetch(api, {
+        method: 'PUT',
+        headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Settings update', content, sha })
+      });
+      status.textContent = put.ok ? '✓ Gespeichert auf allen Geräten' : '✗ Fehler: ' + put.status;
+      status.style.color = put.ok ? 'var(--accent)' : 'var(--down)';
+    } catch(e) {
+      status.textContent = '✗ Netzwerkfehler';
+      status.style.color = 'var(--down)';
+    }
+  }
 
   function saveAll() {
     ['etf1','etf2','tg'].forEach(k => {
       localStorage.setItem('wert-' + k, document.getElementById('wert-' + k).value);
     });
+    localStorage.setItem('btd-refhoch', document.getElementById('refhoch-input').value);
+    ['etf1','etf2','tg'].forEach(k => localStorage.setItem('yield-' + k, document.getElementById('yield-' + k).value.replace(',','.')));
+    localStorage.setItem('tax-pct', document.getElementById('tax-input').value.replace(',','.'));
+    pushSettingsToGitHub(getSettings());
     renderWerte();
     renderBtd();
     renderYield();
     document.getElementById('daten-modal').style.display = 'none';
+  }
+
+  async function loadSettings() {
+    try {
+      const res = await fetch('settings.json?_=' + Date.now());
+      if (!res.ok) return;
+      const s = await res.json();
+      if (s['btd-refhoch'])  { document.getElementById('refhoch-input').value = s['btd-refhoch']; localStorage.setItem('btd-refhoch', s['btd-refhoch']); }
+      if (s['yield-etf1'])   { document.getElementById('yield-etf1').value = s['yield-etf1']; localStorage.setItem('yield-etf1', s['yield-etf1'].replace(',','.')); }
+      if (s['yield-etf2'])   { document.getElementById('yield-etf2').value = s['yield-etf2']; localStorage.setItem('yield-etf2', s['yield-etf2'].replace(',','.')); }
+      if (s['yield-tg'])     { document.getElementById('yield-tg').value = s['yield-tg']; localStorage.setItem('yield-tg', s['yield-tg'].replace(',','.')); }
+      if (s['tax-pct'])      { document.getElementById('tax-input').value = s['tax-pct']; localStorage.setItem('tax-pct', s['tax-pct'].replace(',','.')); }
+      if (s['kalk-sparrate']) document.getElementById('kalk-sparrate').value = s['kalk-sparrate'];
+      if (s['kalk-rendite'])  kalkRendite = s['kalk-rendite'];
+      renderWerte(); renderBtd(); renderYield();
+    } catch(e) {}
   }
 
   // Modal mit Klick außerhalb schließen
