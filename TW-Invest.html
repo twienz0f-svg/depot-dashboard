@@ -546,7 +546,8 @@
       'yield-tg':     document.getElementById('yield-tg').value,
       'tax-pct':      document.getElementById('tax-input').value,
       'kalk-sparrate': document.getElementById('kalk-sparrate').value,
-      'kalk-rendite':  kalkRendite
+      'kalk-rendite':  kalkRendite,
+      '_ts':           Date.now()
     };
   }
 
@@ -598,6 +599,7 @@
     if (s['kalk-sparrate']) document.getElementById('kalk-sparrate').value = s['kalk-sparrate'];
     if (s['kalk-rendite'] !== undefined) kalkRendite = parseInt(s['kalk-rendite']);
     localStorage.setItem('settings-cache', JSON.stringify(s));
+    if (s['_ts']) localStorage.setItem('settings-ts', s['_ts']);
     renderWerte(); renderBtd(); renderYield();
   }
 
@@ -622,7 +624,9 @@
       const res = await fetch(url);
       if (!res.ok) return;
       const s = await res.json();
-      applySettings(s);
+      const remoteTs = s['_ts'] || 0;
+      const localTs = parseInt(localStorage.getItem('settings-ts') || '0');
+      if (remoteTs > localTs) applySettings(s);
     } catch(e) {}
   }
 
