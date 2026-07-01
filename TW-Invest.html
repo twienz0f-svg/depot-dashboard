@@ -88,7 +88,6 @@
 
     .cards{grid-template-columns:1fr 1fr;gap:10px;}
     .cards .card:first-child{grid-column:1/-1;}
-    .cards .card:last-child{grid-column:1/-1;}
     .card{padding:13px 15px;}
     .card .val{font-size:24px;}
 
@@ -245,7 +244,6 @@
     <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.640,88 €</div></div>
     <div class="card"><div class="lbl">Einkommen / Monat</div><div class="val num">72,29 €</div></div>
     <div class="card"><div class="lbl">Einkommen / Jahr</div><div class="val num">867,48 €</div></div>
-    <div class="card"><div class="lbl">Ausschüttungsrendite</div><div class="val num">0,00 %</div></div>
   </div>
 
   <section class="panel">
@@ -275,7 +273,10 @@
       <div style="width:0.5%;background:var(--surface);height:100%;"></div>
       <div class="seg" style="width:48.2%;background:#C9A84C;height:100%;"></div>
     </div>
-    <div class="legend"></div>
+    <div style="display:flex;align-items:flex-start;gap:16px;">
+      <div class="legend" style="flex:1;"></div>
+      <div class="yield-pct" style="text-align:right;flex-shrink:0;"></div>
+    </div>
   </section>
 
   <section class="panel">
@@ -517,15 +518,16 @@
       <span class="it">Zinsen <b class="num">${fmtEuro(zinsen)} €</b> <span class="mut num">(${pct(zinsen)} %)</span></span>
       <span class="mut">= <b class="num" style="color:var(--ink)">${fmtEuro(total)} € / Monat</b></span>`;
 
-    // Ausschüttungsrendite
+    // Gesamtrendite
     const gesamt = VAL_ETF1 + VAL_ETF2 + VAL_TG;
     const yieldPct = gesamt > 0 ? (total * 12 / gesamt * 100) : 0;
+    document.querySelector('.yield-pct').innerHTML =
+      `<span style="font-size:13.5px;color:var(--muted);">Yield: </span><span style="font-size:13.5px;font-weight:600;color:var(--accent);" class="num">${yieldPct.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})} %</span>`;
 
     // Top-Karten
     const cards = document.querySelectorAll('.card .val');
     if (cards[1]) cards[1].textContent = fmtEuro(total) + ' €';
     if (cards[2]) cards[2].textContent = fmtEuro(total * 12) + ' €';
-    if (cards[3]) cards[3].textContent = yieldPct.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' %';
   }
 
   function autoFmt(el) {
