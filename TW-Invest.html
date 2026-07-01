@@ -105,6 +105,9 @@
     /* Frühpension-Beschriftungen kompakter */
     .fire-ticks{font-size:9px !important;letter-spacing:-.3px;}
 
+    /* Simulation: Sparrate + Rendite untereinander */
+    .sim-grid{grid-template-columns:1fr !important;gap:18px !important;}
+
     .legend{gap:12px;font-size:12.5px;}
   }
 </style>
@@ -135,24 +138,27 @@
       <h2>Sparrate</h2>
       <p class="hint">Simulation bis zur Frühpension</p>
 
-      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
-        <div style="display:flex;align-items:center;gap:8px;max-width:280px;">
-          <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
-            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
-          <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
+      <div class="sim-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <label style="font-size:12px;color:var(--muted);">Monatlicher Betrag</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
+              style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
+            <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
+          </div>
+          <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;"></div>
         </div>
-        <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;max-width:280px;"></div>
-      </div>
 
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:360px;">
-          <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
-          <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
-          <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
-          <button id="kalk-r10" onclick="setRendite(10)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">10 %</button>
-          <button id="kalk-r11" onclick="setRendite(11)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">11 %</button>
-          <button id="kalk-r12" onclick="setRendite(12)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">12 %</button>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
+            <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
+            <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
+            <button id="kalk-r10" onclick="setRendite(10)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">10 %</button>
+            <button id="kalk-r11" onclick="setRendite(11)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">11 %</button>
+            <button id="kalk-r12" onclick="setRendite(12)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">12 %</button>
+          </div>
         </div>
       </div>
 
