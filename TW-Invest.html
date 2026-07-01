@@ -129,7 +129,7 @@
 
   <!-- Kalkulation-Modal -->
   <div id="kalk-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(360px,calc(100vw - 28px));display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(440px,calc(100vw - 28px));display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:15px;font-weight:600;color:var(--ink);">FIRE</span>
         <button onclick="document.getElementById('kalk-modal').style.display='none'"
@@ -705,22 +705,23 @@
       const tg = fvCalc(tgAktuell, tgSpar, yTG,         monate);
       const ausWW = ww * wwYield / 100 / 12 * netto;
       const ausTG = tg * yTG    / 100 / 12 * netto;
-      return { alter, datum, ww, tg, ausWW, ausTG };
+      return { alter, datum, ww, tg, ausWW, ausTG, gesamt: ww + tg, ausGesamt: ausWW + ausTG };
     });
 
-    const rowStyle = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;';
-    const hdStyle  = 'display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:0 0 8px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);';
+    const rowStyle = 'display:grid;grid-template-columns:0.7fr 1fr 1fr 1fr;gap:4px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;';
+    const hdStyle  = 'display:grid;grid-template-columns:0.7fr 1fr 1fr 1fr;gap:4px;padding:0 0 8px;font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);';
 
     document.getElementById('kalk-result').innerHTML = `
       <div style="display:flex;flex-direction:column;gap:0;">
         <div style="${hdStyle}">
-          <span>Alter</span><span style="text-align:right">Weltwirtschaft</span><span style="text-align:right">Tagesgeld</span>
+          <span>Alter</span><span style="text-align:right">Weltwirtschaft</span><span style="text-align:right">Tagesgeld</span><span style="text-align:right">Gesamt</span>
         </div>
         ${meilensteine.map(m => `
         <div style="${rowStyle}">
           <span style="color:var(--ink);font-weight:600;">${m.alter} Jahre<br><span style="font-size:11px;color:var(--muted);font-weight:400;">${m.datum.toLocaleDateString('de-DE',{month:'2-digit',year:'numeric'})}</span></span>
           <span style="text-align:right;color:var(--ink);" class="num">${fmtEuro(m.ww)} €<br><span style="font-size:11px;color:var(--accent);">${fmtEuro(m.ausWW)} € / Mo.</span></span>
           <span style="text-align:right;color:var(--ink);" class="num">${fmtEuro(m.tg)} €<br><span style="font-size:11px;color:#C9A84C;">${fmtEuro(m.ausTG)} € / Mo.</span></span>
+          <span style="text-align:right;color:var(--ink);font-weight:600;" class="num">${fmtEuro(m.gesamt)} €<br><span style="font-size:11px;color:var(--ink);font-weight:400;">${fmtEuro(m.ausGesamt)} € / Mo.</span></span>
         </div>`).join('')}
       </div>`;
   }
