@@ -119,36 +119,35 @@
       <h1>TW-Invest 🌱</h1>
       <p>Weltwirtschaft (70/10) + Reserve (20) · Stand <span id="stamp"></span></p>
     </div>
-    <div style="display:flex;gap:8px;margin-top:2px;">
-      <button onclick="openKalkulation()"
+    <div style="display:flex;gap:8px;margin-top:2px;flex-wrap:wrap;justify-content:flex-end;">
+      <button id="nav-main" onclick="showPage('main')"
+        style="background:var(--accent);border:1px solid var(--accent);border-radius:8px;color:#fff;font-size:13px;padding:6px 14px;cursor:pointer;">Übersicht</button>
+      <button id="nav-fire" onclick="showPage('fire')"
         style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;">FIRE</button>
       <button onclick="document.getElementById('daten-modal').style.display='flex'"
         style="background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:13px;padding:6px 14px;cursor:pointer;">DATEN</button>
     </div>
   </header>
 
-  <!-- Kalkulation-Modal -->
-  <div id="kalk-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
-    <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;width:min(440px,calc(100vw - 28px));display:flex;flex-direction:column;gap:20px;max-height:90vh;overflow-y:auto;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:15px;font-weight:600;color:var(--ink);">FIRE</span>
-        <button onclick="document.getElementById('kalk-modal').style.display='none'"
-          style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;">✕</button>
-      </div>
+  <!-- Seite 2: FIRE -->
+  <div id="page-fire" style="display:none;">
+    <section class="panel">
+      <h2>FIRE</h2>
+      <p class="hint">Simulation bis zur Frühpension</p>
 
-      <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
         <label style="font-size:12px;color:var(--muted);">Monatliche Sparrate</label>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;align-items:center;gap:8px;max-width:280px;">
           <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
             style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
           <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
         </div>
-        <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;"></div>
+        <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;max-width:280px;"></div>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:8px;">
         <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:360px;">
           <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
           <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
           <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
@@ -158,9 +157,14 @@
         </div>
       </div>
 
+      <button onclick="saveKalkulation()" style="margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 24px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
+    </section>
+
+    <section class="panel">
+      <h2>Prognose</h2>
+      <p class="hint">Vermögensentwicklung &amp; monatliches Einkommen</p>
       <div id="kalk-result"></div>
-      <button onclick="saveKalkulation()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
-    </div>
+    </section>
   </div>
 
   <!-- Berechnungsdaten-Modal -->
@@ -232,6 +236,9 @@
       <button onclick="saveAll()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
     </div>
   </div>
+
+  <!-- Seite 1: Übersicht -->
+  <div id="page-main">
 
   <div class="cards">
     <div class="card"><div class="lbl">Gesamtdepot</div><div class="val num">125.640,88 €</div></div>
@@ -339,6 +346,8 @@
     </p>
     <div class="ladder" id="btd-ladder"></div>
   </section>
+
+  </div><!-- /page-main -->
 
   <footer></footer>
 
@@ -731,14 +740,23 @@
     const s = getSettings();
     applySettings(s);
     await pushSettingsToGitHub(s);
-    document.getElementById('kalk-modal').style.display = 'none';
   }
 
-  function openKalkulation() {
-    // Sparrate/Rendite sind bereits aus settings.json (Git) via loadSettings gesetzt
-    setRendite(kalkRendite);
-    renderKalkulation();
-    document.getElementById('kalk-modal').style.display = 'flex';
+  // Seiten-Umschaltung Übersicht <-> FIRE
+  function showPage(p) {
+    const fire = p === 'fire';
+    document.getElementById('page-main').style.display = fire ? 'none' : '';
+    document.getElementById('page-fire').style.display = fire ? '' : 'none';
+    const setNav = (id, on) => {
+      const b = document.getElementById(id);
+      b.style.background  = on ? 'var(--accent)'  : 'var(--surface)';
+      b.style.color       = on ? '#fff'           : 'var(--muted)';
+      b.style.borderColor = on ? 'var(--accent)'  : 'var(--line)';
+    };
+    setNav('nav-main', !fire);
+    setNav('nav-fire', fire);
+    if (fire) { setRendite(kalkRendite); renderKalkulation(); }
+    window.scrollTo(0, 0);
   }
 </script>
 </body>
