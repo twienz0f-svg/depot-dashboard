@@ -78,6 +78,10 @@
 
   footer{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.6;}
 
+  /* DATEN-Eingabefelder: dürfen unter ihre Standardbreite schrumpfen (kein Overflow) */
+  .dfield{min-width:0;}
+  .dfield input{min-width:0;width:100%;}
+
   @media(max-width:560px){
     body{padding:20px 14px 48px;}
 
@@ -189,23 +193,23 @@
         <button onclick="saveAll()" title="Speichern" aria-label="Speichern" style="flex-shrink:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;color:var(--accent);font-size:17px;line-height:1;padding:6px 12px;cursor:pointer;">✓</button>
       </div>
 
-      <div class="daten-head" style="display:grid;grid-template-columns:1fr 180px 150px;gap:14px;font-size:11px;color:var(--faint);padding-bottom:6px;">
+      <div class="daten-head" style="display:grid;grid-template-columns:1fr 180px 150px;gap:24px;font-size:11px;color:var(--faint);padding-bottom:6px;">
         <span>Position</span><span style="text-align:right;">Aktueller Wert</span><span style="text-align:right;">Ausschüttung</span>
       </div>
 
-      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>Vanguard FTSE All-World</span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-etf1" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-etf1" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
       </div>
 
-      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>L&amp;G Global Dividends</span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-etf2" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-etf2" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
       </div>
 
-      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
+      <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>TR Tagesgeld</span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-tg" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
         <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-tg" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
@@ -233,7 +237,7 @@
         </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:16px;max-width:420px;">
+      <div style="display:flex;flex-direction:column;gap:6px;margin-top:16px;">
         <label style="font-size:12px;color:var(--muted);">GitHub Token (einmalig pro Gerät)</label>
         <input id="gh-token" type="password" placeholder="ghp_..." onchange="localStorage.setItem('gh-token',this.value)"
           style="background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:13px;padding:7px 10px;font-family:inherit;">
