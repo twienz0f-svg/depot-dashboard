@@ -687,8 +687,8 @@
 
     const dot = (c) => `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${c};flex-shrink:0;"></span>`;
     const splitCard = (c, name, val) => `
-      <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;">
-        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);line-height:1.3;">${dot(c)}<span>${name}</span></div>
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;text-align:center;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:11.5px;color:var(--muted);line-height:1.3;">${dot(c)}<span>${name}</span></div>
         <div class="num" style="font-size:15px;color:var(--ink);margin-top:5px;">${fmtEuro(val)} €</div>
       </div>`;
     document.getElementById('kalk-split').innerHTML =
