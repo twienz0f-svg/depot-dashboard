@@ -78,9 +78,10 @@
 
   footer{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.6;}
 
-  /* DATEN-Eingabefelder: dürfen unter ihre Standardbreite schrumpfen (kein Overflow) */
-  .dfield{min-width:0;}
-  .dfield input{min-width:0;width:100%;}
+  /* Eingabefelder mit Einheit (€, %) direkt im Feld als Suffix */
+  .ufield{display:block;position:relative;min-width:0;}
+  .ufield input{width:100%;text-align:right;padding:7px 26px 7px 10px;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;font-family:inherit;}
+  .ufield .unit{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;}
 
   @media(max-width:560px){
     body{padding:20px 14px 48px;}
@@ -154,11 +155,7 @@
 
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
         <label style="font-size:12px;color:var(--muted);">Monatlicher Betrag</label>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
-            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:15px;padding:8px 12px;text-align:right;font-family:inherit;">
-          <span style="color:var(--muted);font-size:13px;white-space:nowrap;">€ / Monat</span>
-        </div>
+        <span class="ufield"><input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"><span class="unit">€</span></span>
         <div id="kalk-split" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;"></div>
       </div>
 
@@ -199,20 +196,20 @@
 
       <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#2A78D6;flex-shrink:0;"></span>Vanguard FTSE All-World</span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-etf1" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-etf1" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
+        <span class="ufield"><input id="wert-etf1" type="text" value="" onblur="autoFmt(this)"><span class="unit">€</span></span>
+        <span class="ufield"><input id="yield-etf1" type="text" value="" onblur="autoFmt(this)"><span class="unit">%</span></span>
       </div>
 
       <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#0F6E56;flex-shrink:0;"></span>L&amp;G Global Dividends</span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-etf2" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-etf2" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
+        <span class="ufield"><input id="wert-etf2" type="text" value="" onblur="autoFmt(this)"><span class="unit">€</span></span>
+        <span class="ufield"><input id="yield-etf2" type="text" value="" onblur="autoFmt(this)"><span class="unit">%</span></span>
       </div>
 
       <div class="daten-row" style="display:grid;grid-template-columns:1fr 180px 150px;gap:12px 24px;align-items:center;padding:8px 0;border-top:1px solid var(--line);">
         <span class="dname" style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink);"><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#C9A84C;flex-shrink:0;"></span>TR Tagesgeld</span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="wert-tg" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">€</span></span>
-        <span class="dfield" style="display:flex;align-items:center;gap:6px;"><input id="yield-tg" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;"><span style="color:var(--muted);font-size:13px;width:12px;">%</span></span>
+        <span class="ufield"><input id="wert-tg" type="text" value="" onblur="autoFmt(this)"><span class="unit">€</span></span>
+        <span class="ufield"><input id="yield-tg" type="text" value="" onblur="autoFmt(this)"><span class="unit">%</span></span>
       </div>
     </section>
 
@@ -223,17 +220,11 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;">
         <div style="display:flex;flex-direction:column;gap:8px;">
           <label style="font-size:12px;color:var(--muted);">Letztes ATH</label>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input id="refhoch-input" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;">
-            <span style="color:var(--muted);font-size:13px;width:12px;">€</span>
-          </div>
+          <span class="ufield"><input id="refhoch-input" type="text" value="" onblur="autoFmt(this)"><span class="unit">€</span></span>
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;">
           <label style="font-size:12px;color:var(--muted);">Steuer</label>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input id="tax-input" type="text" value="" onblur="autoFmt(this)" style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:7px 10px;text-align:right;font-family:inherit;">
-            <span style="color:var(--muted);font-size:13px;width:12px;">%</span>
-          </div>
+          <span class="ufield"><input id="tax-input" type="text" value="" onblur="autoFmt(this)"><span class="unit">%</span></span>
         </div>
       </div>
 
