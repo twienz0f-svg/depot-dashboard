@@ -105,8 +105,8 @@
     /* Frühpension-Beschriftungen kompakter */
     .fire-ticks{font-size:9px !important;letter-spacing:-.3px;}
 
-    /* Simulation: Sparrate + Rendite untereinander */
-    .sim-grid{grid-template-columns:1fr !important;gap:18px !important;}
+    /* Simulation: Sparraten-Aufteilung untereinander */
+    #kalk-split{grid-template-columns:1fr !important;}
 
     .legend{gap:12px;font-size:12.5px;}
   }
@@ -138,31 +138,29 @@
       <h2>Sparrate</h2>
       <p class="hint">Simulation bis zur Frühpension</p>
 
-      <div class="sim-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <label style="font-size:12px;color:var(--muted);">Monatlicher Betrag</label>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
-              style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:14px;padding:6px 10px;text-align:right;font-family:inherit;">
-            <span style="color:var(--muted);font-size:13px;">€ / Monat</span>
-          </div>
-          <div id="kalk-split" style="display:grid;grid-template-columns:1fr 80px 16px;gap:6px 8px;font-size:12px;color:var(--muted);padding:4px 0;align-items:center;"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+        <label style="font-size:12px;color:var(--muted);">Monatlicher Betrag</label>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <input id="kalk-sparrate" type="text" value="" onblur="autoFmt(this); renderKalkulation()"
+            style="flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;color:var(--ink);font-size:15px;padding:8px 12px;text-align:right;font-family:inherit;">
+          <span style="color:var(--muted);font-size:13px;white-space:nowrap;">€ / Monat</span>
         </div>
+        <div id="kalk-split" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px;"></div>
+      </div>
 
-        <div style="display:flex;flex-direction:column;gap:8px;">
-          <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
-          <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
-            <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
-            <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
-            <button id="kalk-r10" onclick="setRendite(10)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">10 %</button>
-            <button id="kalk-r11" onclick="setRendite(11)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">11 %</button>
-            <button id="kalk-r12" onclick="setRendite(12)" style="flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">12 %</button>
-          </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <label style="font-size:12px;color:var(--muted);">Rendite Weltwirtschaft</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button id="kalk-r7"  onclick="setRendite(7)"  style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">7 %</button>
+          <button id="kalk-r8"  onclick="setRendite(8)"  style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">8 %</button>
+          <button id="kalk-r9"  onclick="setRendite(9)"  style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">9 %</button>
+          <button id="kalk-r10" onclick="setRendite(10)" style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">10 %</button>
+          <button id="kalk-r11" onclick="setRendite(11)" style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">11 %</button>
+          <button id="kalk-r12" onclick="setRendite(12)" style="flex:1;min-width:52px;padding:8px 0;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--muted);font-size:13px;cursor:pointer;">12 %</button>
         </div>
       </div>
 
-      <button onclick="saveKalkulation()" style="margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 24px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
+      <button onclick="saveKalkulation()" style="margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:14px;font-weight:600;cursor:pointer;">Speichern</button>
     </section>
 
     <section class="panel">
@@ -696,11 +694,16 @@
     const tgSpar    = sparrate * 0.20;
     const wwSpar    = etf1Spar + etf2Spar;
 
-    const dot = (c) => `<span style="display:inline-block;width:7px;height:7px;border-radius:2px;background:${c};margin-right:3px;"></span>`;
+    const dot = (c) => `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${c};flex-shrink:0;"></span>`;
+    const splitCard = (c, name, val) => `
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);line-height:1.3;">${dot(c)}<span>${name}</span></div>
+        <div class="num" style="font-size:15px;color:var(--ink);margin-top:5px;">${fmtEuro(val)} €</div>
+      </div>`;
     document.getElementById('kalk-split').innerHTML =
-      `<span style="display:flex;align-items:center;gap:5px;">${dot('#2A78D6')}Vanguard FTSE All-World</span><span style="text-align:right;">${fmtEuro(etf1Spar)}</span><span>€</span>` +
-      `<span style="display:flex;align-items:center;gap:5px;">${dot('#0F6E56')}L&amp;G Global Dividends</span><span style="text-align:right;">${fmtEuro(etf2Spar)}</span><span>€</span>` +
-      `<span style="display:flex;align-items:center;gap:5px;">${dot('#C9A84C')}TR Tagesgeld</span><span style="text-align:right;">${fmtEuro(tgSpar)}</span><span>€</span>`;
+      splitCard('#2A78D6', 'Vanguard FTSE All-World', etf1Spar) +
+      splitCard('#0F6E56', 'L&amp;G Global Dividends', etf2Spar) +
+      splitCard('#C9A84C', 'TR Tagesgeld', tgSpar);
     const wwAktuell = parseEuro('wert-etf1') + parseEuro('wert-etf2');
     const tgAktuell = parseEuro('wert-tg');
     const y1  = parseYield('yield-etf1');
